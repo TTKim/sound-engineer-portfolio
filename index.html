@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="theme-color" content="#2C2C2C">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Hajung Yang's Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-kicker">SOUND ENGINEER PORTFOLIO</div>
+            <h1>Hajung Yang's Portfolio</h1>
+            <p class="subtitle">작업 유형, 아티스트, 장르, 연도 기준으로 빠르게 탐색할 수 있는 사운드 엔지니어링 아카이브</p>
+            <div class="header-meta" id="headerMeta"></div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="view-intro">
+                <h2 id="viewTitle">작업유형별 보기</h2>
+                <p id="viewDescription">카드를 선택하면 해당 작업물 목록을 바로 확인할 수 있습니다.</p>
+            </div>
+            <div class="filter-tabs">
+                <button class="filter-tab active" data-filter="category">작업유형별</button>
+                <button class="filter-tab" data-filter="artist">아티스트별</button>
+                <button class="filter-tab" data-filter="genre">장르별</button>
+                <button class="filter-tab" data-filter="year">연도별</button>
+            </div>
+            <div class="portfolio-grid" id="portfolioGrid">
+                <!-- 카드들이 여기에 동적으로 생성됩니다 -->
+            </div>
+        </div>
+    </main>
+
+    <!-- 호버 시 표시되는 모달 -->
+    <div class="modal" id="musicModal">
+        <div class="modal-content">
+            <span class="close" id="closeModal">&times;</span>
+            <div class="modal-body" id="modalBody">
+                <!-- 음악 정보가 여기에 표시됩니다 -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

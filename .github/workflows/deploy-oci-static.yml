@@ -1,0 +1,99 @@
+name: Deploy Static Site to OCI
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "index.html"
+      - "styles.css"
+      - "script.js"
+      - "Portfolio_list.csv"
+      - "portfolio_media_map.json"
+      - ".github/workflows/deploy-oci-static.yml"
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install OCI CLI
+        run: |
+          python -m pip install --upgrade pip
+          pip install oci-cli
+
+      - name: Configure OCI CLI
+        shell: bash
+        run: |
+          mkdir -p "$HOME/.oci"
+          cat > "$HOME/.oci/config" <<EOF
+          [DEFAULT]
+          user=${{ secrets.OCI_USER_OCID }}
+          fingerprint=${{ secrets.OCI_FINGERPRINT }}
+          tenancy=${{ secrets.OCI_TENANCY_OCID }}
+          region=ca-montreal-1
+          key_file=$HOME/.oci/oci_api_key.pem
+          pass_phrase=${{ secrets.OCI_CLI_PASSPHRASE }}
+          EOF
+          cat > "$HOME/.oci/oci_api_key.pem" <<'EOF'
+          ${{ secrets.OCI_PRIVATE_KEY_PEM }}
+          EOF
+          chmod 600 "$HOME/.oci/config" "$HOME/.oci/oci_api_key.pem"
+
+      - name: Upload files to OCI bucket
+        shell: bash
+        env:
+          OCI_CLI_PROFILE: DEFAULT
+        run: |
+          oci os object put --force \
+            --namespace-name axqgdd9bzhff \
+            --bucket-name bigsummer-portfolio \
+            --name index.html \
+            --file index.html \
+            --content-type text/html \
+            --region ca-montreal-1
+          oci os object put --force \
+            --namespace-name axqgdd9bzhff \
+            --bucket-name bigsummer-portfolio \
+            --name styles.css \
+            --file styles.css \
+            --content-type text/css \
+            --region ca-montreal-1
+          oci os object put --force \
+            --namespace-name axqgdd9bzhff \
+            --bucket-name bigsummer-portfolio \
+            --name script.js \
+            --file script.js \
+            --content-type application/javascript \
+            --region ca-montreal-1
+          oci os object put --force \
+            --namespace-name axqgdd9bzhff \
+            --bucket-name bigsummer-portfolio \
+            --name Portfolio_list.csv \
+            --file Portfolio_list.csv \
+            --content-type text/csv \
+            --region ca-montreal-1
+          oci os object put --force \
+            --namespace-name axqgdd9bzhff \
+            --bucket-name bigsummer-portfolio \
+            --name portfolio_media_map.json \
+            --file portfolio_media_map.json \
+            --content-type application/json \
+            --region ca-montreal-1
+
+      - name: Purge Cloudflare cache for portfolio host
+        if: ${{ secrets.CLOUDFLARE_API_TOKEN != '' && secrets.CLOUDFLARE_ZONE_ID != '' }}
+        shell: bash
+        run: |
+          curl -sS -X POST "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/purge_cache" \
+            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --data '{"hosts":["portfolio.hajungs.com"]}'
+

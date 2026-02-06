@@ -1,0 +1,13 @@
+.DS_Store
+.deploy_tmp/
+
+# Local/runtime logs
+*.log
+
+# Local Python cache
+__pycache__/
+*.pyc
+
+# Local cloud credentials
+.oci/
+.cloudflared/
