@@ -282,19 +282,31 @@ async function loadMediaMatchMap() {
     }
 }
 
-function normalizeWorkCategory(workText) {
+function mapWorkPartToCategory(workPart) {
+    const part = String(workPart || '').trim().toLowerCase();
+    if (!part) return null;
+    if (part.includes('믹싱') || part.includes('mix')) return 'Mixing';
+    if (part.includes('녹음') || part.includes('record')) return 'Recording';
+    if (part.includes('방송') || part.includes('broadcast')) return 'Broadcasting';
+    if (part.includes('튠') || part.includes('edit')) return 'Digital Editing';
+    return 'Other';
+}
+
+function parseWorkCategories(workText) {
     const workParts = (workText || '')
         .split(',')
-        .map(part => part.trim().toLowerCase())
+        .map(part => part.trim())
         .filter(Boolean);
     
-    for (const part of workParts) {
-        if (part.includes('믹싱') || part.includes('mix')) return 'Mixing';
-        if (part.includes('녹음') || part.includes('record')) return 'Recording';
-        if (part.includes('방송') || part.includes('broadcast')) return 'Broadcasting';
-        if (part.includes('튠') || part.includes('edit')) return 'Digital Editing';
-    }
-    return 'Other';
+    const categories = [];
+    workParts.forEach(part => {
+        const mapped = mapWorkPartToCategory(part);
+        if (mapped && !categories.includes(mapped)) {
+            categories.push(mapped);
+        }
+    });
+    
+    return categories.length ? categories : ['Other'];
 }
 
 function inferYearValue(...texts) {
@@ -353,7 +365,8 @@ function buildArtistsDataFromCsv(csvText) {
             };
         }
         
-        const category = normalizeWorkCategory(work);
+        const workCategories = parseWorkCategories(work);
+        const primaryCategory = workCategories[0];
         const title = titleRaw || (album ? `${album} 작업물` : `작업물 ${songId}`);
         const year = inferYearValue(album, titleRaw, note);
         const descriptionParts = [];
@@ -367,16 +380,18 @@ function buildArtistsDataFromCsv(csvText) {
         built[artistName].songs.push({
             id: songId++,
             title,
-            genre: category,
+            genre: workCategories.join(' / '),
             year,
-            category,
+            category: primaryCategory,
+            categories: workCategories,
+            workDisplay: work || workCategories.join(', '),
             description: descriptionParts.join(' | ') || '포트폴리오 작업물',
             youtubeId: media?.youtube_id || '',
             thumbnailUrl: media?.cover_url || media?.youtube_thumbnail || ''
         });
         
         if (album) built[artistName]._albumSet.add(album);
-        built[artistName]._categorySet.add(category);
+        workCategories.forEach(cat => built[artistName]._categorySet.add(cat));
     }
     
     const artistNames = Object.keys(built);
@@ -487,11 +502,15 @@ function getSongsByCategory() {
     const songs = getAllSongs();
     const grouped = {};
     songs.forEach(song => {
-        const category = song.category || 'Other';
-        if (!grouped[category]) {
-            grouped[category] = [];
-        }
-        grouped[category].push(song);
+        const categories = Array.isArray(song.categories) && song.categories.length
+            ? song.categories
+            : [song.category || 'Other'];
+        categories.forEach(category => {
+            if (!grouped[category]) {
+                grouped[category] = [];
+            }
+            grouped[category].push(song);
+        });
     });
     return grouped;
 }
@@ -1018,8 +1037,8 @@ function openModal(music) {
         <p class="modal-description">${music.description}</p>
         <div class="modal-details">
             <div class="detail-item">
-                <div class="detail-label">장르</div>
-                <div class="detail-value">${music.genre}</div>
+                <div class="detail-label">작업유형</div>
+                <div class="detail-value">${music.workDisplay || music.genre}</div>
             </div>
             <div class="detail-item">
                 <div class="detail-label">연도</div>
