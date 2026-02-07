@@ -323,6 +323,42 @@ main {
     opacity: 0.46;
 }
 
+/* 작업유형 카드 전용 분할 썸네일 */
+.category-thumbnails-grid {
+    display: grid;
+    grid-template-columns: repeat(var(--thumb-cols, 2), minmax(0, 1fr));
+    grid-template-rows: repeat(var(--thumb-rows, 2), minmax(0, 1fr));
+    gap: 3px;
+    padding: 3px;
+}
+
+.category-card .artist-thumbnails::before {
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.2), transparent 38%);
+}
+
+.category-thumbnail {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.08);
+}
+
+.category-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    opacity: 0.88;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.category-card:hover .category-thumbnail img {
+    transform: scale(1.04);
+    opacity: 1;
+}
+
 .card-info {
     padding: 16px;
 }

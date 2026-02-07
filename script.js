@@ -531,6 +531,38 @@ function getSongsByCategory() {
     return grouped;
 }
 
+function getCategoryThumbnailLayout(songCount) {
+    if (songCount <= 1) return { cols: 1, rows: 1 };
+    if (songCount === 2) return { cols: 2, rows: 1 };
+    if (songCount === 3) return { cols: 3, rows: 1 };
+    if (songCount <= 4) return { cols: 2, rows: 2 };
+    if (songCount <= 6) return { cols: 3, rows: 2 };
+    return { cols: 3, rows: 3 };
+}
+
+function shuffleSongs(songs) {
+    const copied = [...songs];
+    for (let i = copied.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copied[i], copied[j]] = [copied[j], copied[i]];
+    }
+    return copied;
+}
+
+function getCategoryThumbnailSongs(songs, cellCount) {
+    if (!songs.length || cellCount <= 0) return [];
+    
+    const shuffled = shuffleSongs(songs);
+    const picked = shuffled.slice(0, Math.min(cellCount, shuffled.length));
+    
+    // 셀이 남는 경우 일부 썸네일을 반복 사용해 빈칸 없이 채움
+    while (picked.length < cellCount) {
+        picked.push(shuffled[Math.floor(Math.random() * shuffled.length)]);
+    }
+    
+    return picked;
+}
+
 // 필터 모드에 따라 카드 생성
 function createCardsByFilter(filterMode) {
     const grid = document.getElementById('portfolioGrid');
@@ -753,16 +785,18 @@ function createCategoryCards() {
         card.className = 'category-card';
         card.dataset.category = category;
         
-        // 대표곡 썸네일 (최대 4개)
-        const featuredSongs = songs.slice(0, 4);
-        const thumbnailsHtml = featuredSongs.map((song, index) => 
-            `<div class="featured-thumbnail" style="z-index: ${4 - index}">
+        // 카테고리 전용 분할 썸네일 (최대 3x3)
+        const layout = getCategoryThumbnailLayout(songs.length);
+        const cellCount = Math.min(layout.cols * layout.rows, 9);
+        const thumbnailSongs = getCategoryThumbnailSongs(songs, cellCount);
+        const thumbnailsHtml = thumbnailSongs.map(song => 
+            `<div class="category-thumbnail">
                 <img src="" alt="${song.title}" data-youtube-id="${song.youtubeId}">
             </div>`
         ).join('');
         
         card.innerHTML = `
-            <div class="artist-thumbnails">
+            <div class="artist-thumbnails category-thumbnails-grid" style="--thumb-cols: ${layout.cols}; --thumb-rows: ${layout.rows};">
                 ${thumbnailsHtml}
             </div>
             <div class="card-info">
@@ -774,8 +808,8 @@ function createCategoryCards() {
         `;
         
         // 썸네일 이미지 로드
-        card.querySelectorAll('.featured-thumbnail img').forEach((img, index) => {
-            loadThumbnailForSong(img, featuredSongs[index]);
+        card.querySelectorAll('.category-thumbnail img').forEach((img, index) => {
+            loadThumbnailForSong(img, thumbnailSongs[index]);
         });
         
         // 클릭 이벤트
