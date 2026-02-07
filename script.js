@@ -367,13 +367,17 @@ function buildArtistsDataFromCsv(csvText) {
         
         const workCategories = parseWorkCategories(work);
         const primaryCategory = workCategories[0];
-        const title = titleRaw || (album ? `${album} 작업물` : `작업물 ${songId}`);
+        const isAllTracks = titleRaw === '전곡';
+        const title = isAllTracks
+            ? (album || '전곡 작업')
+            : (titleRaw || (album ? `${album} 작업물` : `작업물 ${songId}`));
         const year = inferYearValue(album, titleRaw, note);
         const descriptionParts = [];
         const mediaKey = makeMediaKey(artistName, album, titleRaw);
         const media = mediaMatchMap[mediaKey] || null;
         
         if (album) descriptionParts.push(`앨범/프로젝트: ${album}`);
+        if (isAllTracks) descriptionParts.push('범위: 전곡 (앨범 전체 작업)');
         if (work) descriptionParts.push(`작업: ${work}`);
         if (note) descriptionParts.push(`비고: ${note}`);
         
