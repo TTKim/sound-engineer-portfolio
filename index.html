@@ -10,17 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-    <link id="appStylesheet" rel="stylesheet" href="styles.css">
-    <script>
-        (() => {
-            const assetVersion = String(Date.now());
-            window.__assetVersion = assetVersion;
-            const stylesheet = document.getElementById('appStylesheet');
-            if (stylesheet) {
-                stylesheet.href = `styles.css?v=${assetVersion}`;
-            }
-        })();
-    </script>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
@@ -60,13 +50,6 @@
         </div>
     </div>
 
-    <script>
-        (() => {
-            const assetVersion = window.__assetVersion || String(Date.now());
-            const appScript = document.createElement('script');
-            appScript.src = `script.js?v=${assetVersion}`;
-            document.body.appendChild(appScript);
-        })();
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
