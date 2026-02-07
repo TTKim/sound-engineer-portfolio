@@ -51,13 +51,23 @@ jobs:
         shell: bash
         run: |
           BUILD_ID="${GITHUB_SHA::8}"
-          sed "s/__BUILD_ID__/${BUILD_ID}/g" index.html > index.deploy.html
+          STYLE_FILE="styles.${BUILD_ID}.css"
+          SCRIPT_FILE="script.${BUILD_ID}.js"
+          sed \
+            -e "s|styles.css|${STYLE_FILE}|g" \
+            -e "s|script.js|${SCRIPT_FILE}|g" \
+            index.html > index.deploy.html
+          cp styles.css "${STYLE_FILE}"
+          cp script.js "${SCRIPT_FILE}"
 
       - name: Upload files to OCI bucket
         shell: bash
         env:
           OCI_CLI_PROFILE: DEFAULT
         run: |
+          BUILD_ID="${GITHUB_SHA::8}"
+          STYLE_FILE="styles.${BUILD_ID}.css"
+          SCRIPT_FILE="script.${BUILD_ID}.js"
           oci os object put --force \
             --namespace-name axqgdd9bzhff \
             --bucket-name bigsummer-portfolio \
@@ -69,10 +79,26 @@ jobs:
           oci os object put --force \
             --namespace-name axqgdd9bzhff \
             --bucket-name bigsummer-portfolio \
+            --name "${STYLE_FILE}" \
+            --file "${STYLE_FILE}" \
+            --content-type text/css \
+            --cache-control "public, max-age=31536000, immutable" \
+            --region ca-montreal-1
+          oci os object put --force \
+            --namespace-name axqgdd9bzhff \
+            --bucket-name bigsummer-portfolio \
             --name styles.css \
             --file styles.css \
             --content-type text/css \
             --cache-control "public, max-age=300, must-revalidate" \
+            --region ca-montreal-1
+          oci os object put --force \
+            --namespace-name axqgdd9bzhff \
+            --bucket-name bigsummer-portfolio \
+            --name "${SCRIPT_FILE}" \
+            --file "${SCRIPT_FILE}" \
+            --content-type application/javascript \
+            --cache-control "public, max-age=31536000, immutable" \
             --region ca-montreal-1
           oci os object put --force \
             --namespace-name axqgdd9bzhff \
