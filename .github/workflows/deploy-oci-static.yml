@@ -58,6 +58,7 @@ jobs:
             --name index.html \
             --file index.html \
             --content-type text/html \
+            --cache-control "no-cache, no-store, must-revalidate" \
             --region ca-montreal-1
           oci os object put --force \
             --namespace-name axqgdd9bzhff \
@@ -65,6 +66,7 @@ jobs:
             --name styles.css \
             --file styles.css \
             --content-type text/css \
+            --cache-control "public, max-age=300, must-revalidate" \
             --region ca-montreal-1
           oci os object put --force \
             --namespace-name axqgdd9bzhff \
@@ -72,6 +74,7 @@ jobs:
             --name script.js \
             --file script.js \
             --content-type application/javascript \
+            --cache-control "public, max-age=300, must-revalidate" \
             --region ca-montreal-1
           oci os object put --force \
             --namespace-name axqgdd9bzhff \
@@ -79,6 +82,7 @@ jobs:
             --name Portfolio_list.csv \
             --file Portfolio_list.csv \
             --content-type text/csv \
+            --cache-control "public, max-age=300, must-revalidate" \
             --region ca-montreal-1
           oci os object put --force \
             --namespace-name axqgdd9bzhff \
@@ -86,6 +90,7 @@ jobs:
             --name portfolio_media_map.json \
             --file portfolio_media_map.json \
             --content-type application/json \
+            --cache-control "public, max-age=300, must-revalidate" \
             --region ca-montreal-1
 
       - name: Purge Cloudflare cache for portfolio host (optional)
