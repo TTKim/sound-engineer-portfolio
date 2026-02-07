@@ -322,6 +322,13 @@ function formatYearLabel(year) {
     return Number.isFinite(Number(year)) ? `${year}년` : String(year || '미상');
 }
 
+function isAllTracksTitle(titleRaw) {
+    const normalized = String(titleRaw || '').trim();
+    if (!normalized) return false;
+    if (normalized === '전곡') return true;
+    return /^(\d+\s*,\s*)+\d+$/.test(normalized);
+}
+
 function buildArtistsDataFromCsv(csvText) {
     const lines = csvText
         .split(/\r?\n/)
@@ -367,7 +374,7 @@ function buildArtistsDataFromCsv(csvText) {
         
         const workCategories = parseWorkCategories(work);
         const primaryCategory = workCategories[0];
-        const isAllTracks = titleRaw === '전곡';
+        const isAllTracks = isAllTracksTitle(titleRaw);
         const title = isAllTracks
             ? (album || '전곡 작업')
             : (titleRaw || (album ? `${album} 작업물` : `작업물 ${songId}`));
@@ -377,7 +384,12 @@ function buildArtistsDataFromCsv(csvText) {
         const media = mediaMatchMap[mediaKey] || null;
         
         if (album) descriptionParts.push(`앨범/프로젝트: ${album}`);
-        if (isAllTracks) descriptionParts.push('범위: 전곡 (앨범 전체 작업)');
+        if (isAllTracks) {
+            descriptionParts.push('범위: 전곡 (앨범 전체 작업)');
+            if (titleRaw && titleRaw !== '전곡') {
+                descriptionParts.push(`원본 표기: ${titleRaw}`);
+            }
+        }
         if (work) descriptionParts.push(`작업: ${work}`);
         if (note) descriptionParts.push(`비고: ${note}`);
         
