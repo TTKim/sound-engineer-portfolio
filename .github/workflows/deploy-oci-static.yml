@@ -47,6 +47,12 @@ jobs:
           EOF
           chmod 600 "$HOME/.oci/config" "$HOME/.oci/oci_api_key.pem"
 
+      - name: Build deploy-ready index with cache-busting version
+        shell: bash
+        run: |
+          BUILD_ID="${GITHUB_SHA::8}"
+          sed "s/__BUILD_ID__/${BUILD_ID}/g" index.html > index.deploy.html
+
       - name: Upload files to OCI bucket
         shell: bash
         env:
@@ -56,7 +62,7 @@ jobs:
             --namespace-name axqgdd9bzhff \
             --bucket-name bigsummer-portfolio \
             --name index.html \
-            --file index.html \
+            --file index.deploy.html \
             --content-type text/html \
             --cache-control "no-cache, no-store, must-revalidate" \
             --region ca-montreal-1
