@@ -8,6 +8,8 @@ Outputs:
 
 import csv
 import json
+import os
+import re
 import subprocess
 from dataclasses import dataclass, asdict
 from datetime import datetime, timezone
@@ -22,6 +24,7 @@ ROOT = Path(__file__).resolve().parent
 CSV_PATH = ROOT / "Portfolio_list.csv"
 OUTPUT_PATH = ROOT / "portfolio_media_map.json"
 YTDLP_PATH = Path.home() / "Library" / "Python" / "3.9" / "bin" / "yt-dlp"
+ENABLE_YT_SEARCH = os.getenv("ENABLE_YT_SEARCH", "").strip().lower() in {"1", "true", "yes"}
 
 
 def normalize(value: str) -> str:
@@ -30,6 +33,31 @@ def normalize(value: str) -> str:
 
 def make_key(artist: str, album: str, title: str) -> str:
     return f"{normalize(artist)}|{normalize(album)}|{normalize(title)}"
+
+
+def is_youtube_url(value: str) -> bool:
+    return bool(re.match(r"^https?://(?:www\.)?(?:youtu\.be|youtube\.com)/", (value or "").strip(), re.IGNORECASE))
+
+
+def extract_youtube_id(value: str) -> str:
+    text = (value or "").strip()
+    if not text:
+        return ""
+    short = re.search(r"youtu\.be/([A-Za-z0-9_-]{11})", text, re.IGNORECASE)
+    if short:
+        return short.group(1)
+    watch = re.search(r"[?&]v=([A-Za-z0-9_-]{11})", text, re.IGNORECASE)
+    if watch:
+        return watch.group(1)
+    embed = re.search(r"youtube\.com/embed/([A-Za-z0-9_-]{11})", text, re.IGNORECASE)
+    if embed:
+        return embed.group(1)
+    return ""
+
+
+def to_canonical_youtube_url(value: str) -> str:
+    video_id = extract_youtube_id(value)
+    return f"https://www.youtube.com/watch?v={video_id}" if video_id else ""
 
 
 @dataclass
@@ -48,6 +76,8 @@ class MediaMatch:
 
 
 def run_yt_search(query: str) -> Dict[str, str]:
+    if not ENABLE_YT_SEARCH:
+        return {}
     if not YTDLP_PATH.exists():
         return {}
 
@@ -83,12 +113,39 @@ def run_yt_search(query: str) -> Dict[str, str]:
         return {}
 
 
+def fetch_youtube_oembed(youtube_url: str) -> Dict[str, str]:
+    canonical = to_canonical_youtube_url(youtube_url)
+    if not canonical:
+        return {}
+    try:
+        url = f"https://www.youtube.com/oembed?format=json&url={quote_plus(canonical)}"
+        resp = requests.get(url, timeout=15)
+        if resp.status_code != 200:
+            return {}
+        data = resp.json()
+        video_id = extract_youtube_id(canonical)
+        return {
+            "youtube_id": video_id,
+            "youtube_title": data.get("title") or "",
+            "youtube_url": canonical,
+            "youtube_thumbnail": f"https://img.youtube.com/vi/{video_id}/hqdefault.jpg" if video_id else "",
+        }
+    except Exception:
+        return {}
+
+
 def run_cover_search(artist: str, album: str, title: str) -> str:
-    terms = [f"{artist} {album}", f"{artist} {title}", f"{artist}"]
+    title_term = (title or "").split(",")[0].strip()
+    if is_youtube_url(title_term):
+        title_term = ""
+    terms = [f"{artist} {album}", f"{artist} {title_term}", f"{artist} {album} {title_term}", f"{artist}"]
     session = requests.Session()
     headers = {"User-Agent": "Mozilla/5.0"}
 
     for term in terms:
+        term = " ".join(term.split())
+        if not term:
+            continue
         try:
             url = f"https://itunes.apple.com/search?term={quote_plus(term)}&entity=album,song&country=KR&limit=5"
             resp = session.get(url, headers=headers, timeout=15)
@@ -113,6 +170,7 @@ def build_matches() -> List[MediaMatch]:
             artist = (raw.get("Artist") or "").strip()
             album = (raw.get("Album") or "").strip()
             title = (raw.get("Title") or "").strip()
+            youtube_url = (raw.get("YoutubeURL") or raw.get("YouTubeURL") or raw.get("youtube_url") or "").strip()
             work = (raw.get("Work") or "").strip()
             note = (raw.get("note") or "").strip()
             if not artist:
@@ -127,14 +185,17 @@ def build_matches() -> List[MediaMatch]:
                 key=make_key(artist, album, title),
             )
 
-            query_parts = [artist]
-            if title:
-                query_parts.append(title.split(",")[0].strip())
-            elif album:
-                query_parts.append(album)
-            query = " ".join(part for part in query_parts if part)
+            source_url = youtube_url or (title if is_youtube_url(title) else "")
+            yt = fetch_youtube_oembed(source_url) if source_url else {}
+            if not yt:
+                query_parts = [artist]
+                if title and not is_youtube_url(title):
+                    query_parts.append(title.split(",")[0].strip())
+                elif album:
+                    query_parts.append(album)
+                query = " ".join(part for part in query_parts if part)
+                yt = run_yt_search(query)
 
-            yt = run_yt_search(query)
             item.youtube_id = yt.get("youtube_id", "")
             item.youtube_title = yt.get("youtube_title", "")
             item.youtube_url = yt.get("youtube_url", "")
@@ -159,4 +220,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

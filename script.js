@@ -265,6 +265,31 @@ function makeMediaKey(artist, album, title) {
     return `${normalizeMediaKey(artist)}|${normalizeMediaKey(album)}|${normalizeMediaKey(title)}`;
 }
 
+function isYoutubeUrl(value) {
+    return /^https?:\/\/(?:www\.)?(?:youtu\.be|youtube\.com)\//i.test(String(value || '').trim());
+}
+
+function extractYoutubeId(value) {
+    const text = String(value || '').trim();
+    if (!text) return '';
+
+    const shortMatch = text.match(/youtu\.be\/([A-Za-z0-9_-]{11})/i);
+    if (shortMatch) return shortMatch[1];
+
+    const watchMatch = text.match(/[?&]v=([A-Za-z0-9_-]{11})/i);
+    if (watchMatch) return watchMatch[1];
+
+    const embedMatch = text.match(/youtube\.com\/embed\/([A-Za-z0-9_-]{11})/i);
+    if (embedMatch) return embedMatch[1];
+
+    return '';
+}
+
+function toCanonicalYoutubeUrl(value) {
+    const id = extractYoutubeId(value);
+    return id ? `https://www.youtube.com/watch?v=${id}` : '';
+}
+
 async function loadMediaMatchMap() {
     try {
         const response = await fetch('portfolio_media_map.json');
@@ -350,6 +375,7 @@ function buildArtistsDataFromCsv(csvText) {
         artist: findHeaderIndex('Artist'),
         album: findHeaderIndex('Album'),
         title: findHeaderIndex('Title'),
+        youtubeUrl: findHeaderIndex('YoutubeURL', 'YouTubeURL', 'youtube_url'),
         genre: findHeaderIndex('Genre'),
         work: findHeaderIndex('Work'),
         note: findHeaderIndex('note')
@@ -367,6 +393,7 @@ function buildArtistsDataFromCsv(csvText) {
         
         const album = (row[columnIndex.album] || '').trim();
         const titleRaw = (row[columnIndex.title] || '').trim();
+        const youtubeUrlRaw = (row[columnIndex.youtubeUrl] || '').trim();
         const genreRaw = (row[columnIndex.genre] || '').trim();
         const work = (row[columnIndex.work] || '').trim();
         const note = (row[columnIndex.note] || '').trim();
@@ -384,14 +411,22 @@ function buildArtistsDataFromCsv(csvText) {
         
         const workCategories = parseWorkCategories(work);
         const primaryCategory = workCategories[0];
+        const titleLooksLikeYoutubeUrl = isYoutubeUrl(titleRaw);
+        const youtubeUrl = toCanonicalYoutubeUrl(youtubeUrlRaw || (titleLooksLikeYoutubeUrl ? titleRaw : ''));
         const isAllTracks = isAllTracksTitle(titleRaw);
-        const title = isAllTracks
-            ? (album || '전곡 작업')
-            : (titleRaw || (album ? `${album} 작업물` : `작업물 ${songId}`));
-        const year = inferYearValue(album, titleRaw, note);
-        const descriptionParts = [];
         const mediaKey = makeMediaKey(artistName, album, titleRaw);
         const media = mediaMatchMap[mediaKey] || null;
+        const youtubeId = extractYoutubeId(youtubeUrl) || media?.youtube_id || '';
+        const title = isAllTracks
+            ? (album || '전곡 작업')
+            : (
+                titleLooksLikeYoutubeUrl
+                    ? (media?.youtube_title || (album ? `${album} 영상` : `작업물 ${songId}`))
+                    : (titleRaw || (album ? `${album} 작업물` : `작업물 ${songId}`))
+            );
+        const year = inferYearValue(album, titleRaw, note);
+        const descriptionParts = [];
+        const mappedYoutubeUrl = toCanonicalYoutubeUrl(media?.youtube_url || '');
         
         if (album) descriptionParts.push(`앨범/프로젝트: ${album}`);
         if (isAllTracks) {
@@ -402,6 +437,9 @@ function buildArtistsDataFromCsv(csvText) {
         }
         if (work) descriptionParts.push(`작업: ${work}`);
         if (note) descriptionParts.push(`비고: ${note}`);
+        if (youtubeUrl || mappedYoutubeUrl) {
+            descriptionParts.push(`영상: ${youtubeUrl || mappedYoutubeUrl}`);
+        }
         
         built[artistName].songs.push({
             id: songId++,
@@ -412,8 +450,9 @@ function buildArtistsDataFromCsv(csvText) {
             categories: workCategories,
             workDisplay: work || workCategories.join(', '),
             description: descriptionParts.join(' | ') || '포트폴리오 작업물',
-            youtubeId: media?.youtube_id || '',
-            thumbnailUrl: media?.cover_url || media?.youtube_thumbnail || ''
+            youtubeId,
+            youtubeUrl: youtubeUrl || mappedYoutubeUrl || (youtubeId ? `https://www.youtube.com/watch?v=${youtubeId}` : ''),
+            thumbnailUrl: media?.cover_url || media?.youtube_thumbnail || (youtubeId ? `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg` : '')
         });
         
         if (album) built[artistName]._albumSet.add(album);
@@ -1065,7 +1104,7 @@ function hideMusicInfo() {
 function openModal(music) {
     const modal = document.getElementById('musicModal');
     const modalBody = document.getElementById('modalBody');
-    const youtubeWatchUrl = `https://www.youtube.com/watch?v=${music.youtubeId}`;
+    const youtubeWatchUrl = music.youtubeUrl || (music.youtubeId ? `https://www.youtube.com/watch?v=${music.youtubeId}` : '');
     const isMobile = window.innerWidth <= 768;
     const isFileProtocol = window.location.protocol === 'file:';
     const youtubeParams = new URLSearchParams({
@@ -1077,19 +1116,23 @@ function openModal(music) {
         youtubeParams.set('origin', window.location.origin);
     }
 
-    const youtubeBlock = `
-        <div class="youtube-embed">
-            <iframe
-                src="https://www.youtube-nocookie.com/embed/${music.youtubeId}?${youtubeParams.toString()}"
-                title="${music.title} - ${music.artist}"
-                referrerpolicy="strict-origin-when-cross-origin"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowfullscreen
-                loading="lazy">
-            </iframe>
-        </div>
-        ${isFileProtocol ? `<div class="youtube-fallback"><p class="youtube-fallback-message">현재 file://로 열려 있어 재생 오류가 날 수 있습니다. 브라우저에서 http://127.0.0.1:8000 으로 접속하면 페이지 내 재생이 됩니다. <a class="youtube-open-link" href="${youtubeWatchUrl}" target="_blank" rel="noopener noreferrer">YouTube에서 직접 보기</a></p></div>` : ''}
-    `;
+    const youtubeBlock = music.youtubeId
+        ? `
+            <div class="youtube-embed">
+                <iframe
+                    src="https://www.youtube-nocookie.com/embed/${music.youtubeId}?${youtubeParams.toString()}"
+                    title="${music.title} - ${music.artist}"
+                    referrerpolicy="strict-origin-when-cross-origin"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen
+                    loading="lazy">
+                </iframe>
+            </div>
+            ${isFileProtocol && youtubeWatchUrl ? `<div class="youtube-fallback"><p class="youtube-fallback-message">현재 file://로 열려 있어 재생 오류가 날 수 있습니다. 브라우저에서 http://127.0.0.1:8000 으로 접속하면 페이지 내 재생이 됩니다. <a class="youtube-open-link" href="${youtubeWatchUrl}" target="_blank" rel="noopener noreferrer">YouTube에서 직접 보기</a></p></div>` : ''}
+        `
+        : (youtubeWatchUrl
+            ? `<div class="youtube-fallback"><p class="youtube-fallback-message"><a class="youtube-open-link" href="${youtubeWatchUrl}" target="_blank" rel="noopener noreferrer">YouTube에서 직접 보기</a></p></div>`
+            : `<div class="youtube-fallback"><p class="youtube-fallback-message">연결된 YouTube 링크가 없습니다.</p></div>`);
     
     modalBody.innerHTML = `
         <h2 class="modal-title">${music.title}</h2>
