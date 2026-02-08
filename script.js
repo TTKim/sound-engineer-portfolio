@@ -338,12 +338,21 @@ function buildArtistsDataFromCsv(csvText) {
     if (lines.length < 2) return null;
     
     const headers = parseCsvLine(lines[0]);
+    const findHeaderIndex = (...names) => {
+        const normalizedHeaders = headers.map(header => String(header || '').trim().toLowerCase());
+        for (const name of names) {
+            const idx = normalizedHeaders.indexOf(String(name || '').trim().toLowerCase());
+            if (idx !== -1) return idx;
+        }
+        return -1;
+    };
     const columnIndex = {
-        artist: headers.indexOf('Artist'),
-        album: headers.indexOf('Album'),
-        title: headers.indexOf('Title'),
-        work: headers.indexOf('Work'),
-        note: headers.indexOf('note')
+        artist: findHeaderIndex('Artist'),
+        album: findHeaderIndex('Album'),
+        title: findHeaderIndex('Title'),
+        genre: findHeaderIndex('Genre'),
+        work: findHeaderIndex('Work'),
+        note: findHeaderIndex('note')
     };
     
     if (columnIndex.artist === -1) return null;
@@ -358,6 +367,7 @@ function buildArtistsDataFromCsv(csvText) {
         
         const album = (row[columnIndex.album] || '').trim();
         const titleRaw = (row[columnIndex.title] || '').trim();
+        const genreRaw = (row[columnIndex.genre] || '').trim();
         const work = (row[columnIndex.work] || '').trim();
         const note = (row[columnIndex.note] || '').trim();
         
@@ -396,7 +406,7 @@ function buildArtistsDataFromCsv(csvText) {
         built[artistName].songs.push({
             id: songId++,
             title,
-            genre: workCategories.join(' / '),
+            genre: genreRaw || workCategories.join(' / '),
             year,
             category: primaryCategory,
             categories: workCategories,
