@@ -197,6 +197,11 @@ const fallbackArtistsData = {
 
 let artistsData = JSON.parse(JSON.stringify(fallbackArtistsData));
 let mediaMatchMap = {};
+const ASSET_VERSION = '20260308b';
+
+function withVersionParam(path) {
+    return `${path}?v=${ASSET_VERSION}`;
+}
 
 // 현재 보기 상태 관리
 let currentView = 'artists'; // 'artists' 또는 'songs'
@@ -292,7 +297,7 @@ function toCanonicalYoutubeUrl(value) {
 
 async function loadMediaMatchMap() {
     try {
-        const response = await fetch('portfolio_media_map.json');
+        const response = await fetch(withVersionParam('portfolio_media_map.json'), { cache: 'no-store' });
         if (!response.ok) return;
         const payload = await response.json();
         const items = Array.isArray(payload.items) ? payload.items : [];
@@ -332,6 +337,21 @@ function parseWorkCategories(workText) {
     });
     
     return categories.length ? categories : ['Other'];
+}
+
+function parsePriorityValue(value) {
+    const parsed = Number(String(value || '').trim());
+    if (Number.isFinite(parsed) && parsed > 0) {
+        return parsed;
+    }
+    return 1;
+}
+
+function parseYearValue(value) {
+    const text = String(value || '').trim();
+    if (!text) return '';
+    const match = text.match(/(19|20)\d{2}/);
+    return match ? Number(match[0]) : '';
 }
 
 function inferYearValue(...texts) {
@@ -377,7 +397,12 @@ function buildArtistsDataFromCsv(csvText) {
         title: findHeaderIndex('Title'),
         youtubeUrl: findHeaderIndex('YoutubeURL', 'YouTubeURL', 'youtube_url'),
         genre: findHeaderIndex('Genre'),
+        year: findHeaderIndex('Year', 'year'),
+        genreMelon: findHeaderIndex('GenreMelon', 'genreMelon'),
+        coverImageUrl: findHeaderIndex('CoverImageURL', 'coverImageUrl'),
+        melonReleaseDate: findHeaderIndex('MelonReleaseDate', 'melonReleaseDate'),
         work: findHeaderIndex('Work'),
+        priority: findHeaderIndex('priority'),
         note: findHeaderIndex('note')
     };
     
@@ -395,8 +420,14 @@ function buildArtistsDataFromCsv(csvText) {
         const titleRaw = (row[columnIndex.title] || '').trim();
         const youtubeUrlRaw = (row[columnIndex.youtubeUrl] || '').trim();
         const genreRaw = (row[columnIndex.genre] || '').trim();
+        const yearRaw = columnIndex.year === -1 ? '' : (row[columnIndex.year] || '').trim();
+        const genreMelonRaw = columnIndex.genreMelon === -1 ? '' : (row[columnIndex.genreMelon] || '').trim();
+        const coverImageUrlRaw = columnIndex.coverImageUrl === -1 ? '' : (row[columnIndex.coverImageUrl] || '').trim();
+        const melonReleaseDateRaw = columnIndex.melonReleaseDate === -1 ? '' : (row[columnIndex.melonReleaseDate] || '').trim();
         const work = (row[columnIndex.work] || '').trim();
+        const priorityRaw = columnIndex.priority === -1 ? '' : (row[columnIndex.priority] || '').trim();
         const note = (row[columnIndex.note] || '').trim();
+        const priority = parsePriorityValue(priorityRaw);
         
         if (!built[artistName]) {
             built[artistName] = {
@@ -424,7 +455,7 @@ function buildArtistsDataFromCsv(csvText) {
                     ? (media?.youtube_title || (album ? `${album} 영상` : `작업물 ${songId}`))
                     : (titleRaw || (album ? `${album} 작업물` : `작업물 ${songId}`))
             );
-        const year = inferYearValue(album, titleRaw, note);
+        const year = parseYearValue(yearRaw) || inferYearValue(melonReleaseDateRaw, album, titleRaw, note);
         const descriptionParts = [];
         const mappedYoutubeUrl = toCanonicalYoutubeUrl(media?.youtube_url || '');
         
@@ -437,6 +468,7 @@ function buildArtistsDataFromCsv(csvText) {
         }
         if (work) descriptionParts.push(`작업: ${work}`);
         if (note) descriptionParts.push(`비고: ${note}`);
+        if (genreMelonRaw) descriptionParts.push(`멜론 장르: ${genreMelonRaw}`);
         if (youtubeUrl || mappedYoutubeUrl) {
             descriptionParts.push(`영상: ${youtubeUrl || mappedYoutubeUrl}`);
         }
@@ -444,15 +476,18 @@ function buildArtistsDataFromCsv(csvText) {
         built[artistName].songs.push({
             id: songId++,
             title,
-            genre: genreRaw || workCategories.join(' / '),
+            album,
+            // Genre should represent musical genre, not engineering work type.
+            genre: genreRaw || genreMelonRaw || '미분류',
             year,
             category: primaryCategory,
             categories: workCategories,
+            priority,
             workDisplay: work || workCategories.join(', '),
             description: descriptionParts.join(' | ') || '포트폴리오 작업물',
             youtubeId,
             youtubeUrl: youtubeUrl || mappedYoutubeUrl || (youtubeId ? `https://www.youtube.com/watch?v=${youtubeId}` : ''),
-            thumbnailUrl: media?.cover_url || media?.youtube_thumbnail || (youtubeId ? `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg` : '')
+            thumbnailUrl: coverImageUrlRaw || media?.cover_url || media?.youtube_thumbnail || (youtubeId ? `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg` : '')
         });
         
         if (album) built[artistName]._albumSet.add(album);
@@ -480,7 +515,7 @@ function buildArtistsDataFromCsv(csvText) {
 async function loadPortfolioDataFromCsv() {
     try {
         await loadMediaMatchMap();
-        const response = await fetch('Portfolio_list.csv');
+        const response = await fetch(withVersionParam('Portfolio_list.csv'), { cache: 'no-store' });
         if (!response.ok) return;
         
         const csvText = await response.text();
@@ -534,6 +569,115 @@ function getAllSongs() {
         });
     });
     return allSongs;
+}
+
+function normalizePriorityKey(value) {
+    return String(value || '')
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, ' ');
+}
+
+function makePriorityAlbumKey(artist, album) {
+    return `${normalizePriorityKey(artist)}|${normalizePriorityKey(album)}`;
+}
+
+function getPriorityAlbums() {
+    const songs = getAllSongs();
+    const albumsByKey = {};
+
+    songs.forEach(song => {
+        const albumName = String(song.album || '').trim();
+        if (!albumName) return;
+
+        const key = makePriorityAlbumKey(song.artist, albumName);
+        if (!albumsByKey[key]) {
+            albumsByKey[key] = {
+                key,
+                artist: song.artist,
+                album: albumName,
+                priority: getSongPriorityWeight(song),
+                songsCount: 0,
+                youtubeId: song.youtubeId || ''
+            };
+        }
+
+        const current = albumsByKey[key];
+        current.priority = Math.max(current.priority, getSongPriorityWeight(song));
+        current.songsCount += 1;
+        if (!current.youtubeId && song.youtubeId) {
+            current.youtubeId = song.youtubeId;
+        }
+    });
+
+    return Object.values(albumsByKey);
+}
+
+function weightedShuffleAlbums(albums) {
+    return [...albums]
+        .map(album => {
+            const weight = Number(album.priority) > 0 ? Number(album.priority) : 1;
+            return {
+                album,
+                key: Math.pow(Math.random(), 1 / weight)
+            };
+        })
+        .sort((a, b) => b.key - a.key)
+        .map(item => item.album);
+}
+
+function getPriorityStripAlbums(limit = 10) {
+    const albums = getPriorityAlbums();
+    if (!albums.length) return [];
+
+    const weighted = weightedShuffleAlbums(albums);
+    const picked = weighted.slice(0, Math.min(limit, weighted.length));
+    return picked.sort((a, b) => b.priority - a.priority || b.songsCount - a.songsCount);
+}
+
+function renderPriorityShowcase() {
+    const strip = document.getElementById('priorityStrip');
+    const section = document.getElementById('priorityShowcaseSection');
+    if (!strip || !section) return;
+
+    const featured = getPriorityStripAlbums(10);
+    if (!featured.length) {
+        section.style.display = 'none';
+        return;
+    }
+    section.style.display = '';
+
+    strip.innerHTML = '';
+    featured.forEach(item => {
+        const card = document.createElement('article');
+        card.className = 'priority-card';
+
+        const thumb = item.youtubeId
+            ? `<img src="" alt="${item.album}" data-youtube-id="${item.youtubeId}">`
+            : '<div class="priority-card-thumb-fallback">NO VIDEO</div>';
+
+        card.innerHTML = `
+            <div class="priority-card-thumb">
+                ${thumb}
+            </div>
+            <div class="priority-card-info">
+                <div class="priority-card-artist">${item.artist}</div>
+                <div class="priority-card-album">${item.album}</div>
+                <div class="priority-card-meta">${item.songsCount}곡</div>
+            </div>
+        `;
+
+        const thumbImg = card.querySelector('img');
+        if (thumbImg && item.youtubeId) {
+            loadThumbnailWithFallback(thumbImg, item.youtubeId);
+        }
+
+        card.addEventListener('click', () => {
+            showArtistSongs(item.artist);
+        });
+
+        strip.appendChild(card);
+    });
 }
 
 // 장르별로 그룹화
@@ -598,15 +742,53 @@ function shuffleSongs(songs) {
     return copied;
 }
 
+function getSongPriorityWeight(song) {
+    const parsed = Number(song?.priority);
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : 1;
+}
+
+function pickWeightedSong(songs) {
+    if (!songs.length) return null;
+
+    const totalWeight = songs.reduce((sum, song) => sum + getSongPriorityWeight(song), 0);
+    if (totalWeight <= 0) {
+        return songs[Math.floor(Math.random() * songs.length)];
+    }
+
+    let threshold = Math.random() * totalWeight;
+    for (const song of songs) {
+        threshold -= getSongPriorityWeight(song);
+        if (threshold <= 0) return song;
+    }
+
+    return songs[songs.length - 1];
+}
+
+function weightedShuffleSongs(songs) {
+    return [...songs]
+        .map(song => {
+            const weight = getSongPriorityWeight(song);
+            return {
+                song,
+                // Efraimidis-Spirakis weighted random key
+                key: Math.pow(Math.random(), 1 / weight)
+            };
+        })
+        .sort((a, b) => b.key - a.key)
+        .map(item => item.song);
+}
+
 function getCategoryThumbnailSongs(songs, cellCount) {
     if (!songs.length || cellCount <= 0) return [];
     
-    const shuffled = shuffleSongs(songs);
-    const picked = shuffled.slice(0, Math.min(cellCount, shuffled.length));
+    const weighted = weightedShuffleSongs(songs);
+    const picked = weighted.slice(0, Math.min(cellCount, weighted.length));
     
     // 셀이 남는 경우 일부 썸네일을 반복 사용해 빈칸 없이 채움
     while (picked.length < cellCount) {
-        picked.push(shuffled[Math.floor(Math.random() * shuffled.length)]);
+        const selected = pickWeightedSong(songs);
+        if (!selected) break;
+        picked.push(selected);
     }
     
     return picked;
@@ -1200,8 +1382,16 @@ function setupFilterTabs() {
 // 이벤트 리스너 설정
 document.addEventListener('DOMContentLoaded', async () => {
     await loadPortfolioDataFromCsv();
+    renderPriorityShowcase();
     createCardsByFilter('category');
     setupFilterTabs();
+
+    const priorityRefresh = document.getElementById('priorityRefresh');
+    if (priorityRefresh) {
+        priorityRefresh.addEventListener('click', () => {
+            renderPriorityShowcase();
+        });
+    }
     
     // 모달 닫기 버튼
     document.getElementById('closeModal').addEventListener('click', closeModal);

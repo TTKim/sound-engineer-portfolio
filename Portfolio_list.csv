@@ -1,53 +1,63 @@
-Artist,Album,Title,YoutubeURL,Genre,Work
-검정치마,TEAM BABY,전곡,,인디 록,"녹음, 튠"
-검정치마,TEEN TROUBLES,전곡,,인디 록,"녹음, 튠"
-이동수,Solus,전곡,,록,"튠, 믹싱"
-Boynextdoor,the first take,오늘만 I love you,,K-Pop,"방송, 튠"
-Boynextdoor,the first take,count to love,,J-Pop,"방송, 튠"
-국카스텐,음악중심,Kick out,,록,"방송, 튠"
-마치한아,별자리 항해,봄을 향해 걷는 우리,,록,"튠, 녹음, 믹싱"
-Miiro,계절범죄,계절범죄,,록,믹싱
-아이린,Like a flower,"summer rain,winter wish",,K-Pop,튠
-정동원,키다리의 선물,,,K-Pop,튠
-SF9 ,Love Race,"suited, no no no",,K-Pop,튠
-82Major,silence syndrome,"영웅호걸, I promise you",,K-Pop,튠
-이문세,마이 블루스,"이별에도 사랑이, 마이 블루스",,K-Pop,튠
-다비치,stitch,별 생각 없이 살아,,K-Pop,튠
-잔나비,Monkey Hotel,전곡,,K-Pop,튠
-잔나비,잔나비,"1,2,3,4,5,6,7,8,9",,K-Pop,튠
-colde,wave,전곡,,록,튠
-폴킴,Sincerely yours,전곡,,K-Pop,튠
-하현우,킬링보이스,,,R&B/소울,"방송, 튠, 믹싱"
-엄마는아이돌,tvn,방송용 송출 믹스,,K-Pop,방송
-잔나비,전설,나쁜꿈,,K-Pop,믹싱
-백야,이야기집,전곡,,한국 록,믹싱
-유명종,afterglow,전곡,,록,튠
-세븐틴 도겸X승관,소야곡,plelude of love,,K-Pop,녹음
-세븐틴 도겸X승관,소야곡,dream serenade,,K-Pop,녹음
-세븐틴 도겸X승관,소야곡,Silence,,K-Pop,녹음
-세븐틴 도겸X승관,소야곡,Guilty Pleasure,,K-Pop,녹음
-Enhypen,THE SIN : VANISH,Big girls Don't Cry,,K-Pop,녹음
-Enhypen,THE SIN : VANISH,Sleep Tight,,K-Pop,녹음
-김동수,구멍,전곡,,한국 인디,"튠, 믹싱"
-colde,Love part.1,전곡,,OST,튠
-최유리,오랜만이야,오랜만이야,,K-Pop,튠
-최유리,오랜만이야,마지막 날,,K-Pop,튠
-최유리,746,전곡,,K-Pop,튠
-최유리,외로움이란 건,외로움이란 건,,K-Pop,튠
-최유리,미지의 서울 ost Pt.1,노란 봄,,포크,튠
-최유리,노래,잠수,,K-Pop,튠
-최유리,노래,세상아 동화처럼,,K-Pop,튠
-최유리,"머무름, 하나",전곡,,K-Pop,튠
-이승기,라디오라이브,따스한 온기가 필요한 날에📻 | 이승기의 The Radio Live,https://www.youtube.com/watch?v=PgSShLgk1hY,K-Pop,튠
-김레전드,이별을 노래로 만들어 보았습니다,이별을 노래로 만들어 보았습니다,,K-Pop,튠
-폴킴 ,2025 Paul Kim Concert 'Pauliday',"[입덕세로직캠] 폴킴 (Paul Kim) - Have A Good Time, 집돌이 (yours)",https://www.youtube.com/watch?v=_VX_mjalG3k,K-Pop,튠
-폴킴 ,2025 Paul Kim Concert 'Pauliday',[Live Clip] 폴킴 (Paul Kim) - 마음의 여행 @2025 Paul Kim Concert 'Pauliday',https://www.youtube.com/watch?v=d4xDQDzK5hM,K-Pop,튠
-폴킴 ,2025 Paul Kim Concert 'Pauliday',[Live Clip] 폴킴 (Paul Kim) - 지금 이대로도 좋아 @2025 Paul Kim Concert 'Pauliday',https://www.youtube.com/watch?v=0BWGiH2azwQ,K-Pop,튠
-폴킴,Have a good time,Have a good time,,K-Pop,튠
-폴킴,Dream (베일드뮤지션 X 폴킴 with 감일동 솜사탕),Dream (베일드뮤지션 X 폴킴 with 감일동 솜사탕),,R&B/소울,튠
-폴킴,마지막 썸머 ost,비라도 내렸으면 좋겠어,,OST,튠
-폴킴,지금 이대로도 좋아,지금 이대로도 좋아,,K-Pop,튠
-폴킴,지금 이대로도 좋아,마음의 여행,,K-Pop,튠
-폴킴,君に会い (Me After You),君に会い (Me After You),,K-Pop,튠
-폴킴,나의 완벽한 비서 ost,내가 널 지켜줄게,,OST,튠
-폴킴,눈물의 여왕 ost,좋아해요,,OST,튠
+﻿Artist,Album,Title,YoutubeURL,Genre,Year,Work,priority,note,GenreMelon,CoverImageURL,MelonAlbumId,MelonAlbumURL,MelonReleaseDate,MelonLookupStatus,MelonPriorityStream,MelonPriorityDownload,MelonPriorityLike,PriorityMetricSource,PriorityMetricValue
+검정치마,TEAM BABY,전곡,https://www.youtube.com/watch?v=6Y1P8bI_jPI,"인디음악, 록/메탈",2017,"녹음, 튠",9,,"인디음악, 록/메탈",https://cdnimg.melon.co.kr/cm/album/images/100/66/921/10066921_500.jpg?d681ad3ffefc92590ccb8cd33d55b4ee,10066921,https://www.melon.com/album/detail.htm?albumId=10066921,2017.05.30,found,0,0,29744,melon_like_album,29744
+검정치마,TEEN TROUBLES,전곡,https://www.youtube.com/watch?v=XEsJiPdlsqI,"인디음악, 록/메탈",2022,"녹음, 튠",9,,"인디음악, 록/메탈",https://cdnimg.melon.co.kr/cm2/album/images/110/56/063/11056063_20220914191201_500.jpg?49723e96602e8b16d300d1f0ae397429,11056063,https://www.melon.com/album/detail.htm?albumId=11056063,2022.09.15,found,0,0,12899,melon_like_album,12899
+이동수,Solus,전곡,https://www.youtube.com/watch?v=A-Nqlz3eoKQ,"인디음악, 록/메탈, 발라드, 재즈, 보컬재즈",2025,"튠, 믹싱",1,,"인디음악, 록/메탈, 발라드, 재즈, 보컬재즈",https://cdnimg.melon.co.kr/cm2/album/images/124/22/890/12422890_20251204143759_500.jpg?2f1bdd0708d2299678aaf32de8efca8d,12422890,https://www.melon.com/album/detail.htm?albumId=12422890,2025.12.05,found,0,0,11,melon_like_album,11
+Boynextdoor,the first take,오늘만 I love you,https://www.youtube.com/watch?v=B4mLKcVIERs,POP,2022,"방송, 튠",4,,POP,https://cdnimg.melon.co.kr/cm2/album/images/110/61/642/11061642_20220921173659_500.jpg?3e2b6b27554f6cf259714d6e39a8e663,11061642,https://www.melon.com/album/detail.htm?albumId=11061642,2022.09.23,found,0,0,144,melon_like_album,144
+Boynextdoor,the first take,count to love,https://www.youtube.com/watch?v=Dbxfo8YBkYE,POP,2022,"방송, 튠",4,,POP,https://cdnimg.melon.co.kr/cm2/album/images/110/61/642/11061642_20220921173659_500.jpg?3e2b6b27554f6cf259714d6e39a8e663,11061642,https://www.melon.com/album/detail.htm?albumId=11061642,2022.09.23,found,0,0,144,melon_like_album,144
+국카스텐,음악중심,Kick out,https://www.youtube.com/watch?v=qpwfm9bnDfY,록,2025,"방송, 튠",1,,,,,,,not_found,0,0,0,unavailable,0
+마치한아,별자리 항해,봄을 향해 걷는 우리,https://www.youtube.com/watch?v=Wxfgul-2gYs,"인디음악, 록/메탈",2025,"튠, 녹음, 믹싱",1,,"인디음악, 록/메탈",https://cdnimg.melon.co.kr/cm2/album/images/117/45/734/11745734_20250320145015_500.jpg?0875388b18f0bd7ba6ec6c92db774589,11745734,https://www.melon.com/album/detail.htm?albumId=11745734,2025.03.20,found,0,0,7,melon_like_album,7
+Miiro,계절범죄,계절범죄,https://www.youtube.com/watch?v=rWbOrlbhens,록/메탈,2023,믹싱,7,,록/메탈,https://cdnimg.melon.co.kr/cm2/album/images/112/17/356/11217356_20230404145205_500.jpg?9160cdea5cb94bab9429cdb1db2badf7,11217356,https://www.melon.com/album/detail.htm?albumId=11217356,2023.04.05,found,0,0,2480,melon_like_album,2480
+아이린,Like a flower,"summer rain,winter wish",https://www.youtube.com/watch?v=LFNQXerBAMc,"댄스, R&B/Soul, 발라드",2024,튠,8,,"댄스, R&B/Soul, 발라드",https://cdnimg.melon.co.kr/cm2/album/images/116/50/136/11650136_20241125151407_500.jpg?c7597fe78a748642be6ca5ecb0e600be,11650136,https://www.melon.com/album/detail.htm?albumId=11650136,2024.11.26,found,0,0,5333,melon_like_album,5333
+정동원,키다리의 선물,,https://www.youtube.com/watch?v=zB7-gxzWPKM,"성인가요/트로트, 발라드, 댄스, 록/메탈",2025,튠,7,,"성인가요/트로트, 발라드, 댄스, 록/메탈",https://cdnimg.melon.co.kr/cm2/album/images/117/30/848/11730848_20250313101213_500.jpg?f9a3bc13d905f1ae4922ab4722bc04ec,11730848,https://www.melon.com/album/detail.htm?albumId=11730848,2025.03.13,found,0,0,4128,melon_like_album,4128
+SF9 ,Love Race,"suited, no no no",https://www.youtube.com/watch?v=H3Uuek2Bzts,"댄스, R&B/Soul",2025,튠,6,,"댄스, R&B/Soul",https://cdnimg.melon.co.kr/cm2/album/images/117/32/956/11732956_20250310160457_500.jpg?9a8fb993aa903d0b045a6582664ef6a6,11732956,https://www.melon.com/album/detail.htm?albumId=11732956,2025.03.11,found,0,0,977,melon_like_album,977
+82Major,silence syndrome,"영웅호걸, I promise you",https://www.youtube.com/watch?v=JMFAIer3C-Q,"랩/힙합, 발라드, 댄스",2025,튠,5,,"랩/힙합, 발라드, 댄스",https://cdnimg.melon.co.kr/cm2/album/images/117/71/374/11771374_20250411153619_500.jpg?7b7f0a311f96bbc295bcd807d7f8085c,11771374,https://www.melon.com/album/detail.htm?albumId=11771374,2025.04.14,found,0,0,473,melon_like_album,473
+이문세,마이 블루스,"이별에도 사랑이, 마이 블루스",https://www.youtube.com/watch?v=pk4t4K8eaYc,발라드,2024,튠,6,,발라드,https://cdnimg.melon.co.kr/cm2/album/images/116/39/235/11639235_20241112161941_500.jpg?d0a4688cfc888c861adf5626e4e8e521,11639235,https://www.melon.com/album/detail.htm?albumId=11639235,2024.11.13,found,0,0,991,melon_like_album,991
+다비치,stitch,별 생각 없이 살아,https://www.youtube.com/watch?v=tVLVG4gh7_4,발라드,2024,튠,7,,발라드,https://cdnimg.melon.co.kr/cm2/album/images/116/45/314/11645314_20241119175111_500.jpg?ee8b7712c1c309d51772904e53c3ca78,11645314,https://www.melon.com/album/detail.htm?albumId=11645314,2024.11.20,found,0,0,2201,melon_like_album,2201
+잔나비,Monkey Hotel,전곡,https://www.youtube.com/watch?v=UhhNJ-6qEJA,"록/메탈, 인디음악",2016,튠,9,,"록/메탈, 인디음악",https://cdnimg.melon.co.kr/cm/album/images/027/02/242/2702242_500.jpg,2702242,https://www.melon.com/album/detail.htm?albumId=2702242,2016.08.04,found,0,0,18359,melon_like_album,18359
+잔나비,잔나비,"1,2,3,4,5,6,7,8,9",https://www.youtube.com/watch?v=VFRrOFALKu4,"인디음악, 록/메탈",2025,튠,7,,"인디음악, 록/메탈",https://cdnimg.melon.co.kr/cm2/album/images/121/68/471/12168471_20251020165901_500.jpg?02ebed62206378ba4ee3f0d0a4799738,12168471,https://www.melon.com/album/detail.htm?albumId=12168471,2025.10.21,found,0,0,3747,melon_like_album,3747
+colde,wave,전곡,https://www.youtube.com/watch?v=tknDwPAhZ14,"R&B/Soul, 랩/힙합",2018,튠,8,,"R&B/Soul, 랩/힙합",https://cdnimg.melon.co.kr/cm/album/images/102/04/065/10204065_500.jpg?0c38d3e04926cefde7c10bc794dc5e9c,10204065,https://www.melon.com/album/detail.htm?albumId=10204065,2018.09.13,found,0,0,5960,melon_like_album,5960
+폴킴,Sincerely yours,전곡,https://www.youtube.com/watch?v=sMtTPAK3OLc,"R&B/Soul, 발라드",2025,튠,6,,"R&B/Soul, 발라드",https://cdnimg.melon.co.kr/cm2/album/images/116/96/126/11696126_20250120152419_500.jpg?debe47c7309fdaf7199802f0756abb4d,11696126,https://www.melon.com/album/detail.htm?albumId=11696126,2025.01.21,found,0,0,1650,melon_like_album,1650
+하현우,킬링보이스,,https://www.youtube.com/watch?v=9jtrY5kWwJs,R&B/소울,2022,"방송, 튠, 믹싱",1,,,,,,,not_found,0,0,0,unavailable,0
+엄마는아이돌,tvn,방송용 송출 믹스,https://www.youtube.com/watch?v=-cJq6wCPM7o,K-Pop,2021,방송,1,,,,,,,not_found,0,0,0,unavailable,0
+잔나비,전설,나쁜꿈,https://www.youtube.com/watch?v=kmwHW4u08h4,"록/메탈, 인디음악",2019,믹싱,10,,"록/메탈, 인디음악",https://cdnimg.melon.co.kr/cm/album/images/102/60/858/10260858_500.jpg?02df39ed806cd5e224ae1be4ab9417dd,10260858,https://www.melon.com/album/detail.htm?albumId=10260858,2019.03.13,found,0,0,51475,melon_like_album,51475
+백야,이야기집,전곡,https://www.youtube.com/watch?v=q0pYOhHpCWo,록/메탈,2024,믹싱,4,,록/메탈,https://cdnimg.melon.co.kr/cm2/album/images/115/13/035/11513035_20240614142136_500.jpg?552a235b44dbd12c718fd90b0a90146d,11513035,https://www.melon.com/album/detail.htm?albumId=11513035,2024.06.15,found,0,0,141,melon_like_album,141
+유명종,afterglow,전곡,https://www.youtube.com/watch?v=Mxf-LdokGyc,"인디음악, 록/메탈, 발라드",2025,튠,4,,"인디음악, 록/메탈, 발라드",https://cdnimg.melon.co.kr/cm2/album/images/124/36/020/12436020_20251212144403_500.jpg?6edf0e238900dd233ee31434ce6abc78,12436020,https://www.melon.com/album/detail.htm?albumId=12436020,2025.12.15,found,0,0,112,melon_like_album,112
+세븐틴 도겸X승관,소야곡,plelude of love,https://www.youtube.com/watch?v=QvBRYlcYzR8,K-Pop,2026,녹음,1,,,,,,,not_found,0,0,0,unavailable,0
+세븐틴 도겸X승관,소야곡,dream serenade,https://www.youtube.com/watch?v=HL2PQBk-86Y,K-Pop,2026,녹음,1,,,,,,,not_found,0,0,0,unavailable,0
+세븐틴 도겸X승관,소야곡,Silence,https://www.youtube.com/watch?v=x2sI7vcqilY,K-Pop,2026,녹음,1,,,,,,,not_found,0,0,0,unavailable,0
+세븐틴 도겸X승관,소야곡,Guilty Pleasure,https://www.youtube.com/watch?v=vrEAq5NPVJg,K-Pop,2026,녹음,1,,,,,,,not_found,0,0,0,unavailable,0
+Enhypen,THE SIN : VANISH,Big girls Don't Cry,https://www.youtube.com/watch?v=01R62JW9X6Y,"댄스, 일렉트로니카, 랩/힙합, R&B/Soul",2026,녹음,8,,"댄스, 일렉트로니카, 랩/힙합, R&B/Soul",https://cdnimg.melon.co.kr/cm2/album/images/127/19/962/12719962_20260116111022_500.jpg?312ceeb4e2904e1685721752e8e5b481,12719962,https://www.melon.com/album/detail.htm?albumId=12719962,2026.01.16,found,0,0,4632,melon_like_album,4632
+Enhypen,THE SIN : VANISH,Sleep Tight,https://www.youtube.com/watch?v=musv08G6-3U,"댄스, 일렉트로니카, 랩/힙합, R&B/Soul",2026,녹음,8,,"댄스, 일렉트로니카, 랩/힙합, R&B/Soul",https://cdnimg.melon.co.kr/cm2/album/images/127/19/962/12719962_20260116111022_500.jpg?312ceeb4e2904e1685721752e8e5b481,12719962,https://www.melon.com/album/detail.htm?albumId=12719962,2026.01.16,found,0,0,4632,melon_like_album,4632
+김동수,구멍,전곡,https://www.youtube.com/watch?v=Yk2H4qOmFEs,"인디음악, 포크/블루스, 발라드",2022,"튠, 믹싱",2,,"인디음악, 포크/블루스, 발라드",https://cdnimg.melon.co.kr/cm2/album/images/110/89/202/11089202_20221027164450_500.jpg?253347c0c031ddf29c084ddef792f819,11089202,https://www.melon.com/album/detail.htm?albumId=11089202,2022.10.28,found,0,0,22,melon_like_album,22
+colde,Love part.1,전곡,https://www.youtube.com/watch?v=CjceKHus0R0,R&B/Soul,2019,튠,8,,R&B/Soul,https://cdnimg.melon.co.kr/cm/album/images/102/92/745/10292745_500.jpg?dee04ab8f790eac7fc16416990531d4e,10292745,https://www.melon.com/album/detail.htm?albumId=10292745,2019.05.31,found,0,0,11709,melon_like_album,11709
+최유리,오랜만이야,오랜만이야,https://www.youtube.com/watch?v=C0puxFMBLHw,발라드,2024,튠,6,,발라드,https://cdnimg.melon.co.kr/cm2/album/images/114/77/867/11477867_20240430115821_500.jpg?03cf1e9ae9038c5b5e4bf5cb38e68d4a,11477867,https://www.melon.com/album/detail.htm?albumId=11477867,2024.05.02,found,0,0,1640,melon_like_album,1640
+최유리,오랜만이야,마지막 날,https://www.youtube.com/watch?v=dXAzSivUKSQ,발라드,2024,튠,6,,발라드,https://cdnimg.melon.co.kr/cm2/album/images/114/77/867/11477867_20240430115821_500.jpg?03cf1e9ae9038c5b5e4bf5cb38e68d4a,11477867,https://www.melon.com/album/detail.htm?albumId=11477867,2024.05.02,found,0,0,1640,melon_like_album,1640
+최유리,746,전곡,https://www.youtube.com/watch?v=EW3aVVwU7a0,"발라드, R&B/Soul, 재즈",2024,튠,7,,"발라드, R&B/Soul, 재즈",https://cdnimg.melon.co.kr/cm2/album/images/115/96/522/11596522_20241028111854_500.jpg?13b4440d152eac5c1317d44f33933f81,11596522,https://www.melon.com/album/detail.htm?albumId=11596522,2024.10.28,found,0,0,3401,melon_like_album,3401
+최유리,외로움이란 건,외로움이란 건,https://www.youtube.com/watch?v=jrMeTJILPa4,발라드,2025,튠,6,,발라드,https://cdnimg.melon.co.kr/cm2/album/images/117/26/201/11726201_20250228134006_500.jpg?5ec606dc26cc6b213ff2e5b9fb50f6ce,11726201,https://www.melon.com/album/detail.htm?albumId=11726201,2025.03.04,found,0,0,1540,melon_like_album,1540
+최유리,미지의 서울 ost Pt.1,노란 봄,https://www.youtube.com/watch?v=qyDV9-ZiH4c,포크,2025,튠,1,,,,,,,not_found,0,0,0,unavailable,0
+최유리,노래,잠수,https://www.youtube.com/watch?v=BAByJ7PdNew,발라드,2025,튠,6,,발라드,https://cdnimg.melon.co.kr/cm2/album/images/118/49/097/11849097_20250609152644_500.jpg?f8cbb7daa04893ce260679555f54beaf,11849097,https://www.melon.com/album/detail.htm?albumId=11849097,2025.06.10,found,0,0,1312,melon_like_album,1312
+최유리,노래,세상아 동화처럼,https://www.youtube.com/watch?v=vSBFeXJfO6s,발라드,2025,튠,6,,발라드,https://cdnimg.melon.co.kr/cm2/album/images/118/49/097/11849097_20250609152644_500.jpg?f8cbb7daa04893ce260679555f54beaf,11849097,https://www.melon.com/album/detail.htm?albumId=11849097,2025.06.10,found,0,0,1312,melon_like_album,1312
+최유리,"머무름, 하나",전곡,https://www.youtube.com/watch?v=l9JHmsqq-TM,랩/힙합,2009,튠,1,,랩/힙합,https://cdnimg.melon.co.kr/cm2/album/images/056/34/724/5634724_20200507125912_500.jpg,5634724,https://www.melon.com/album/detail.htm?albumId=5634724,2009.12.18,found,0,0,0,unavailable,0
+이승기,라디오라이브,따스한 온기가 필요한 날에📻 | 이승기의 The Radio Live,https://www.youtube.com/watch?v=PgSShLgk1hY,K-Pop,2025,튠,1,,,,,,,not_found,0,0,0,unavailable,0
+김레전드,이별을 노래로 만들어 보았습니다,이별을 노래로 만들어 보았습니다,https://www.youtube.com/watch?v=0K80dW-6hZA,발라드,2025,튠,3,,발라드,https://cdnimg.melon.co.kr/cm2/album/images/124/11/389/12411389_20251127114649_500.jpg?3ebd81bbcffc87f0b15825b8cbae93f5,12411389,https://www.melon.com/album/detail.htm?albumId=12411389,2025.11.28,found,0,0,61,melon_like_album,61
+폴킴 ,2025 Paul Kim Concert 'Pauliday',"[입덕세로직캠] 폴킴 (Paul Kim) - Have A Good Time, 집돌이 (yours)",https://www.youtube.com/watch?v=_VX_mjalG3k,K-Pop,2026,튠,1,,,,,,,not_found,0,0,0,unavailable,0
+폴킴 ,2025 Paul Kim Concert 'Pauliday',[Live Clip] 폴킴 (Paul Kim) - 마음의 여행 @2025 Paul Kim Concert 'Pauliday',https://www.youtube.com/watch?v=d4xDQDzK5hM,K-Pop,2026,튠,1,,,,,,,not_found,0,0,0,unavailable,0
+폴킴 ,2025 Paul Kim Concert 'Pauliday',[Live Clip] 폴킴 (Paul Kim) - 지금 이대로도 좋아 @2025 Paul Kim Concert 'Pauliday',https://www.youtube.com/watch?v=0BWGiH2azwQ,K-Pop,2025,튠,1,,,,,,,not_found,0,0,0,unavailable,0
+폴킴,Have a good time,Have a good time,https://www.youtube.com/watch?v=-F9zsez4vRA,댄스,2025,튠,5,,댄스,https://cdnimg.melon.co.kr/cm2/album/images/123/16/450/12316450_20251114164913_500.jpg?16a17a0359950e50601528ab366ec392,12316450,https://www.melon.com/album/detail.htm?albumId=12316450,2025.11.17,found,0,0,595,melon_like_album,595
+폴킴,Dream (베일드뮤지션 X 폴킴 with 감일동 솜사탕),Dream (베일드뮤지션 X 폴킴 with 감일동 솜사탕),https://www.youtube.com/watch?v=Vk91IJyZJ6k,R&B/Soul,2026,튠,5,,R&B/Soul,https://cdnimg.melon.co.kr/cm2/album/images/124/66/449/12466449_20260105121740_500.jpg?e2c3f203b39b117dea8fd3fd49584a8d,12466449,https://www.melon.com/album/detail.htm?albumId=12466449,2026.01.06,found,0,0,258,melon_like_album,258
+폴킴,마지막 썸머 ost,비라도 내렸으면 좋겠어,https://www.youtube.com/watch?v=CzbfP7rzwqQ,"국내드라마, 발라드",2025,튠,5,,"국내드라마, 발라드",https://cdnimg.melon.co.kr/cm2/album/images/121/99/034/12199034_20251107152401_500.jpg?YUV444,12199034,https://www.melon.com/album/detail.htm?albumId=12199034,2025.11.09,found,0,0,433,melon_like_album,433
+폴킴,지금 이대로도 좋아,지금 이대로도 좋아,https://www.youtube.com/watch?v=AGBQVj0SJKc,발라드,2025,튠,6,,발라드,https://cdnimg.melon.co.kr/cm2/album/images/124/16/577/12416577_20251201154549_500.jpg?9822dea8e8a617aac11896e358553835,12416577,https://www.melon.com/album/detail.htm?albumId=12416577,2025.12.02,found,0,0,838,melon_like_album,838
+폴킴,지금 이대로도 좋아,마음의 여행,https://www.youtube.com/watch?v=d4xDQDzK5hM,발라드,2025,튠,6,,발라드,https://cdnimg.melon.co.kr/cm2/album/images/124/16/577/12416577_20251201154549_500.jpg?9822dea8e8a617aac11896e358553835,12416577,https://www.melon.com/album/detail.htm?albumId=12416577,2025.12.02,found,0,0,838,melon_like_album,838
+폴킴,君に会い (Me After You),君に会い (Me After You),https://www.youtube.com/watch?v=ZsbEOJ37TX4,J-POP,2025,튠,3,,J-POP,https://cdnimg.melon.co.kr/cm2/album/images/121/03/692/12103692_20250908110132_500.jpg?YUV444,12103692,https://www.melon.com/album/detail.htm?albumId=12103692,2025.08.29,found,0,0,43,melon_like_album,43
+폴킴,나의 완벽한 비서 ost,내가 널 지켜줄게,https://www.youtube.com/watch?v=KqD-oIUB4xg,"국내드라마, 발라드",2025,튠,6,,"국내드라마, 발라드",https://cdnimg.melon.co.kr/cm2/album/images/116/82/149/11682149_20241231140751_500.jpg?6e6021dcbc37080e4f2cbd3653db74d3,11682149,https://www.melon.com/album/detail.htm?albumId=11682149,2025.01.02,found,0,0,1135,melon_like_album,1135
+폴킴,눈물의 여왕 ost,좋아해요,https://www.youtube.com/watch?v=mvVzdTX0yVs,"국내드라마, 발라드",2024,튠,7,,"국내드라마, 발라드",https://cdnimg.melon.co.kr/cm2/album/images/114/59/196/11459196_20240405153600_500.jpg?271c839cf293e244428e9c50c5c444df,11459196,https://www.melon.com/album/detail.htm?albumId=11459196,2024.04.06,found,0,0,1983,melon_like_album,1983
+최유리,초봄,초봄,https://www.youtube.com/watch?v=ha7i16DoKQY,발라드,2026,튠,6,,발라드,https://cdnimg.melon.co.kr/cm2/album/images/128/61/947/12861947_20260213160240_500.jpg?c68354695b841da1dda8c09b25465a86,12861947,https://www.melon.com/album/detail.htm?albumId=12861947,2026.02.22,found,0,0,920,melon_like_album,920
+써니사이드,봄의편지,봄의편지,https://www.youtube.com/watch?v=siuwAr675WM,발라드,2026,튠,4,아직발매안됨,발라드,https://cdnimg.melon.co.kr/cm2/album/images/128/98/156/12898156_20260304154251_500.jpg?35f60ba18b3c984227ee360f8e4818ef,12898156,https://www.melon.com/album/detail.htm?albumId=12898156,2026.03.05,found,0,0,93,melon_like_album,93
+폴킴,예나-물음표(feat.폴킴),예나-물음표(feat.폴킴),,,2026,튠,1,,,,,,2026.03,not_found,0,0,0,unavailable,0
+김기태,만취,만취,https://www.youtube.com/watch?v=Q7-f9voDpN8,발라드,2026,튠,4,,발라드,https://cdnimg.melon.co.kr/cm2/album/images/129/05/295/12905295_20260306161953_500.jpg?a51026d33cb1b7a5c67f641f1fd348c6,12905295,https://www.melon.com/album/detail.htm?albumId=12905295,2026.03.08,found,0,0,144,melon_like_album,144
+미유,내가 아줌마가 되어도,내가 아줌마가 되어도,https://www.youtube.com/watch?v=SuckyCrL5uw,포크/블루스,2025,튠,3,,포크/블루스,https://cdnimg.melon.co.kr/cm2/album/images/121/90/221/12190221_20251104114629_500.jpg?18e37a345526a924507191065e91f2f6,12190221,https://www.melon.com/album/detail.htm?albumId=12190221,2025.11.04,found,0,0,74,melon_like_album,74
+이현,딩고 - 킬링보이스,딩고 - 킬링보이스,https://www.youtube.com/watch?v=GrzPs0nEXCI,,2025,방송,1,,,,,,,not_found,0,0,0,unavailable,0
+이현,리무진서비스,리무진서비스,https://www.youtube.com/watch?v=gH4gPjidPgg,,2025,방송,1,,,,,,,not_found,0,0,0,unavailable,0
+TWS 경민 ," 24/7,365"," 24/7,365",https://www.youtube.com/watch?v=zvN5L_m9oxA,,2025,"튠, 방송",1,,,,,,,not_found,0,0,0,unavailable,0
+Enhypen,One in a billion(JP),One in a billion(JP),https://www.youtube.com/watch?v=EKrsvC7XxhE,,2026,녹음,1,,,,,,,not_found,0,0,0,unavailable,0
+성호(boynextdoor),초속5센티미터 x 성호,"one more time, one more chance",https://www.youtube.com/watch?v=473nQeRjOvc,"국외영화, 발라드",2026,"녹음, 튠",7,,"국외영화, 발라드",https://cdnimg.melon.co.kr/cm2/album/images/128/77/975/12877975_20260224114647_500.jpg?f3d528a17d4ae940a62a3e9ca179f084,12877975,https://www.melon.com/album/detail.htm?albumId=12877975,2026.02.25,found,0,0,3919,melon_like_album,3919
