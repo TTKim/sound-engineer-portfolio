@@ -207,6 +207,9 @@ function withVersionParam(path) {
 let currentView = 'artists'; // 'artists' 또는 'songs'
 let currentArtist = null;
 let currentFilter = 'category'; // 'category', 'artist', 'genre', 'year'
+const FILTER_MODES = ['category', 'artist', 'genre', 'year'];
+const NAV_STATE_KEY = '__soundPortfolioNav';
+const NAV_STATE_VERSION = 'v1';
 const filterContext = {
     category: {
         title: '작업유형별 보기',
@@ -225,6 +228,159 @@ const filterContext = {
         description: '연도 흐름으로 작업 이력을 확인하고 시기별 결과물을 비교할 수 있습니다.'
     }
 };
+
+function normalizeFilterMode(filterMode) {
+    return FILTER_MODES.includes(filterMode) ? filterMode : 'category';
+}
+
+function isPortfolioNavState(state) {
+    return Boolean(
+        state &&
+        state[NAV_STATE_KEY] === NAV_STATE_VERSION &&
+        typeof state.view === 'string' &&
+        typeof state.filter === 'string'
+    );
+}
+
+function createRootNavState(filterMode = currentFilter, options = {}) {
+    const { guarded = false } = options;
+    return {
+        [NAV_STATE_KEY]: NAV_STATE_VERSION,
+        view: 'artists',
+        filter: normalizeFilterMode(filterMode),
+        guarded
+    };
+}
+
+function createGuardNavState(filterMode = currentFilter) {
+    return {
+        [NAV_STATE_KEY]: NAV_STATE_VERSION,
+        view: 'guard',
+        filter: normalizeFilterMode(filterMode)
+    };
+}
+
+function createSongsNavState(filterMode, targetType, targetValue) {
+    return {
+        [NAV_STATE_KEY]: NAV_STATE_VERSION,
+        view: 'songs',
+        filter: normalizeFilterMode(filterMode),
+        targetType,
+        targetValue: String(targetValue || '')
+    };
+}
+
+function setActiveFilterTab(filterMode) {
+    const normalized = normalizeFilterMode(filterMode);
+    document.querySelectorAll('.filter-tab').forEach(tab => {
+        tab.classList.toggle('active', tab.dataset.filter === normalized);
+    });
+}
+
+function closeModalIfOpen() {
+    const modal = document.getElementById('musicModal');
+    if (modal && modal.classList.contains('show')) {
+        closeModal();
+    }
+}
+
+function replaceNavState(state) {
+    window.history.replaceState(state, '', window.location.href);
+}
+
+function pushNavState(state) {
+    window.history.pushState(state, '', window.location.href);
+}
+
+function armRootBackGuard(filterMode = currentFilter) {
+    const normalized = normalizeFilterMode(filterMode);
+    replaceNavState(createGuardNavState(normalized));
+    pushNavState(createRootNavState(normalized, { guarded: true }));
+}
+
+function renderRootView(filterMode, options = {}) {
+    const { replaceHistory = false, pushHistory = false } = options;
+    const normalized = normalizeFilterMode(filterMode);
+
+    closeModalIfOpen();
+    currentFilter = normalized;
+    currentView = 'artists';
+    currentArtist = null;
+    setActiveFilterTab(normalized);
+    createCardsByFilter(normalized);
+
+    if (replaceHistory) {
+        replaceNavState(createRootNavState(normalized));
+    } else if (pushHistory) {
+        pushNavState(createRootNavState(normalized));
+    }
+}
+
+function restoreViewFromNavState(state) {
+    if (!isPortfolioNavState(state)) return false;
+
+    const filterMode = normalizeFilterMode(state.filter);
+    if (state.view === 'artists') {
+        renderRootView(filterMode);
+        return true;
+    }
+
+    if (state.view !== 'songs' || typeof state.targetValue !== 'string' || !state.targetValue) {
+        renderRootView(filterMode);
+        return false;
+    }
+
+    if (state.targetType === 'genre') {
+        showGenreSongs(state.targetValue, { pushHistory: false });
+        return true;
+    }
+
+    if (state.targetType === 'year') {
+        showYearSongs(state.targetValue, { pushHistory: false });
+        return true;
+    }
+
+    if (state.targetType === 'category') {
+        showCategorySongs(state.targetValue, { pushHistory: false });
+        return true;
+    }
+
+    if (state.targetType === 'artist') {
+        showArtistSongs(state.targetValue, { pushHistory: false, filterMode });
+        return true;
+    }
+
+    renderRootView(filterMode);
+    return false;
+}
+
+function goBackToRoot(filterMode) {
+    const state = window.history.state;
+    if (isPortfolioNavState(state) && state.view === 'songs') {
+        window.history.back();
+        return;
+    }
+
+    renderRootView(filterMode, { replaceHistory: true });
+    armRootBackGuard(filterMode);
+}
+
+function handleHistoryPopState(event) {
+    if (!isPortfolioNavState(event.state)) return;
+    const filterMode = normalizeFilterMode(event.state.filter);
+
+    if (event.state.view === 'guard') {
+        renderRootView(filterMode, { replaceHistory: true });
+        return;
+    }
+
+    if (event.state.view === 'artists') {
+        renderRootView(filterMode);
+        return;
+    }
+
+    restoreViewFromNavState(event.state);
+}
 
 function parseCsvLine(line) {
     const cells = [];
@@ -1062,12 +1218,16 @@ function createCategoryCards() {
 }
 
 // 장르별 노래 목록 표시
-function showGenreSongs(genre) {
+function showGenreSongs(genre, options = {}) {
+    const { pushHistory = true } = options;
     const genreGroups = getSongsByGenre();
     const songs = genreGroups[genre] || [];
     
+    closeModalIfOpen();
+    currentFilter = 'genre';
     currentView = 'songs';
     currentArtist = genre;
+    setActiveFilterTab(currentFilter);
     updateViewIntro(`${genre} 작업물`, `${songs.length}곡을 연속으로 확인할 수 있습니다.`);
     updateHeaderMeta(`장르: ${genre}`);
     
@@ -1080,9 +1240,7 @@ function showGenreSongs(genre) {
     backButton.className = 'back-button';
     backButton.innerHTML = '← 장르 목록으로';
     backButton.addEventListener('click', () => {
-        currentView = 'artists';
-        currentArtist = null;
-        createCardsByFilter('genre');
+        goBackToRoot('genre');
     });
     grid.appendChild(backButton);
     
@@ -1100,15 +1258,26 @@ function showGenreSongs(genre) {
         const card = createSongCard(song);
         grid.appendChild(card);
     });
+
+    if (pushHistory) {
+        if (isPortfolioNavState(window.history.state) && window.history.state.view === 'artists' && !window.history.state.guarded) {
+            armRootBackGuard('genre');
+        }
+        pushNavState(createSongsNavState('genre', 'genre', genre));
+    }
 }
 
 // 연도별 노래 목록 표시
-function showYearSongs(year) {
+function showYearSongs(year, options = {}) {
+    const { pushHistory = true } = options;
     const yearGroups = getSongsByYear();
     const songs = yearGroups[year] || [];
     
+    closeModalIfOpen();
+    currentFilter = 'year';
     currentView = 'songs';
     currentArtist = year;
+    setActiveFilterTab(currentFilter);
     updateViewIntro(`${formatYearLabel(year)} 작업물`, `${songs.length}곡을 연도 기준으로 정리했습니다.`);
     updateHeaderMeta(`연도: ${year}`);
     
@@ -1121,9 +1290,7 @@ function showYearSongs(year) {
     backButton.className = 'back-button';
     backButton.innerHTML = '← 연도 목록으로';
     backButton.addEventListener('click', () => {
-        currentView = 'artists';
-        currentArtist = null;
-        createCardsByFilter('year');
+        goBackToRoot('year');
     });
     grid.appendChild(backButton);
     
@@ -1141,15 +1308,26 @@ function showYearSongs(year) {
         const card = createSongCard(song);
         grid.appendChild(card);
     });
+
+    if (pushHistory) {
+        if (isPortfolioNavState(window.history.state) && window.history.state.view === 'artists' && !window.history.state.guarded) {
+            armRootBackGuard('year');
+        }
+        pushNavState(createSongsNavState('year', 'year', year));
+    }
 }
 
 // 작업 유형별 노래 목록 표시
-function showCategorySongs(category) {
+function showCategorySongs(category, options = {}) {
+    const { pushHistory = true } = options;
     const categoryGroups = getSongsByCategory();
     const songs = categoryGroups[category] || [];
     
+    closeModalIfOpen();
+    currentFilter = 'category';
     currentView = 'songs';
     currentArtist = category;
+    setActiveFilterTab(currentFilter);
     updateViewIntro(`${category} 작업물`, `${songs.length}곡을 작업 유형 기준으로 보여줍니다.`);
     updateHeaderMeta(`작업유형: ${category}`);
     
@@ -1162,9 +1340,7 @@ function showCategorySongs(category) {
     backButton.className = 'back-button';
     backButton.innerHTML = '← 작업유형 목록으로';
     backButton.addEventListener('click', () => {
-        currentView = 'artists';
-        currentArtist = null;
-        createCardsByFilter('category');
+        goBackToRoot('category');
     });
     grid.appendChild(backButton);
     
@@ -1182,6 +1358,13 @@ function showCategorySongs(category) {
         const card = createSongCard(song);
         grid.appendChild(card);
     });
+
+    if (pushHistory) {
+        if (isPortfolioNavState(window.history.state) && window.history.state.view === 'artists' && !window.history.state.guarded) {
+            armRootBackGuard('category');
+        }
+        pushNavState(createSongsNavState('category', 'category', category));
+    }
 }
 
 // 노래 카드 생성 헬퍼 함수
@@ -1224,12 +1407,17 @@ function createSongCard(song) {
 }
 
 // 아티스트의 노래 목록 표시
-function showArtistSongs(artistName) {
+function showArtistSongs(artistName, options = {}) {
+    const { pushHistory = true, filterMode = currentFilter } = options;
     const artist = artistsData[artistName];
     if (!artist) return;
+    const activeFilter = normalizeFilterMode(filterMode);
     
+    closeModalIfOpen();
+    currentFilter = activeFilter;
     currentView = 'songs';
     currentArtist = artistName;
+    setActiveFilterTab(currentFilter);
     updateViewIntro(`${artist.name} 작업물`, `${artist.songs.length}곡을 아티스트 기준으로 확인합니다.`);
     updateHeaderMeta(`아티스트: ${artist.name}`);
     
@@ -1247,9 +1435,7 @@ function showArtistSongs(artistName) {
                      '← 목록으로';
     backButton.innerHTML = backText;
     backButton.addEventListener('click', () => {
-        currentView = 'artists';
-        currentArtist = null;
-        createCardsByFilter(currentFilter);
+        goBackToRoot(currentFilter);
     });
     grid.appendChild(backButton);
     
@@ -1267,6 +1453,13 @@ function showArtistSongs(artistName) {
         const card = createSongCard({ ...song, artist: artist.name });
         grid.appendChild(card);
     });
+
+    if (pushHistory) {
+        if (isPortfolioNavState(window.history.state) && window.history.state.view === 'artists' && !window.history.state.guarded) {
+            armRootBackGuard(currentFilter);
+        }
+        pushNavState(createSongsNavState(currentFilter, 'artist', artistName));
+    }
 }
 
 // 호버 시 정보 표시 (간단한 툴팁 스타일)
@@ -1358,23 +1551,10 @@ function closeModal() {
 
 // 필터 탭 클릭 이벤트
 function setupFilterTabs() {
-    const filterTabs = document.querySelectorAll('.filter-tab');
-    
-    filterTabs.forEach(tab => {
+    document.querySelectorAll('.filter-tab').forEach(tab => {
         tab.addEventListener('click', () => {
             const filterMode = tab.dataset.filter;
-            
-            // 활성 탭 업데이트
-            filterTabs.forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-            
-            // 필터 모드 변경
-            currentFilter = filterMode;
-            currentView = 'artists';
-            currentArtist = null;
-            
-            // 카드 재생성
-            createCardsByFilter(filterMode);
+            renderRootView(filterMode, { replaceHistory: true });
         });
     });
 }
@@ -1383,8 +1563,26 @@ function setupFilterTabs() {
 document.addEventListener('DOMContentLoaded', async () => {
     await loadPortfolioDataFromCsv();
     renderPriorityShowcase();
-    createCardsByFilter('category');
     setupFilterTabs();
+
+    const initialState = window.history.state;
+    if (isPortfolioNavState(initialState) && initialState.view === 'songs') {
+        restoreViewFromNavState(initialState);
+    } else if (isPortfolioNavState(initialState) && initialState.view === 'artists') {
+        const filterMode = normalizeFilterMode(initialState.filter);
+        renderRootView(filterMode);
+        if (!initialState.guarded) {
+            armRootBackGuard(filterMode);
+        }
+    } else if (isPortfolioNavState(initialState)) {
+        const filterMode = normalizeFilterMode(initialState.filter);
+        renderRootView(filterMode, { replaceHistory: true });
+        armRootBackGuard(filterMode);
+    } else {
+        renderRootView('category');
+        armRootBackGuard('category');
+    }
+    window.addEventListener('popstate', handleHistoryPopState);
 
     const priorityRefresh = document.getElementById('priorityRefresh');
     if (priorityRefresh) {
@@ -1407,9 +1605,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             if (currentView === 'songs') {
-                currentView = 'artists';
-                currentArtist = null;
-                createCardsByFilter(currentFilter);
+                goBackToRoot(currentFilter);
             } else {
                 closeModal();
             }
