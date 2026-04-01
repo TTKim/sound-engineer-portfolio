@@ -1,0 +1,1206 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>YouTube Fill Review Report</title>
+  <style>
+    :root {
+      --bg: #f4f7f6;
+      --panel: #ffffff;
+      --text: #1b2220;
+      --muted: #5a6762;
+      --line: #dbe4e0;
+      --accent: #0f766e;
+      --low: #c2410c;
+      --caution: #a16207;
+      --good: #0f766e;
+      --best: #14532d;
+      --missing: #991b1b;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: "Pretendard", "Noto Sans KR", sans-serif; color: var(--text); background: linear-gradient(180deg,#ecf4f1 0%, #f8fbfa 30%, #f4f7f6 100%); }
+    header { position: sticky; top: 0; z-index: 10; backdrop-filter: blur(6px); background: rgba(244,247,246,0.92); border-bottom: 1px solid var(--line); }
+    .wrap { max-width: 1360px; margin: 0 auto; padding: 14px 16px; }
+    h1 { margin: 0; font-size: 20px; }
+    .summary { margin-top: 8px; display: flex; gap: 8px; flex-wrap: wrap; color: var(--muted); font-size: 13px; }
+    .pill { border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px; background: #fff; }
+    .controls { margin-top: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
+    button { border: 1px solid var(--line); background: #fff; border-radius: 10px; padding: 7px 10px; cursor: pointer; font-size: 13px; }
+    button.active { border-color: var(--accent); color: #fff; background: var(--accent); }
+    main.wrap { padding-top: 16px; padding-bottom: 24px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+    .card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; box-shadow: 0 4px 14px rgba(16,24,20,0.05); }
+    .card-head { padding: 10px 12px 0; }
+    .meta-left { display: flex; align-items: center; gap: 8px; }
+    .row { font-size: 12px; color: var(--muted); }
+    .score { font-size: 11px; padding: 3px 8px; border-radius: 999px; font-weight: 600; border: 1px solid transparent; }
+    .score.low { color: var(--low); border-color: #fdba74; background: #fff7ed; }
+    .score.caution { color: var(--caution); border-color: #fde68a; background: #fefce8; }
+    .score.good { color: var(--good); border-color: #99f6e4; background: #f0fdfa; }
+    .score.best { color: var(--best); border-color: #86efac; background: #f0fdf4; }
+    .score.missing { color: var(--missing); border-color: #fca5a5; background: #fef2f2; }
+    .thumb-link,.thumb { display:block; width:100%; }
+    .thumb { aspect-ratio: 16 / 9; object-fit: cover; background: #e2e8f0; }
+    .thumb.missing { display:flex; align-items:center; justify-content:center; color:#7f1d1d; font-weight:700; font-size:14px; letter-spacing:0.04em; }
+    .meta { padding: 12px; display: grid; gap: 6px; font-size: 13px; }
+    .sub { color: var(--muted); }
+    .title { font-weight: 600; }
+    .line { display: grid; grid-template-columns: 58px 1fr; align-items: start; gap: 8px; color: #2f3b36; }
+    .line span { color: var(--muted); font-size: 12px; text-transform: lowercase; }
+    .line code { background:#f2f5f4; border:1px solid var(--line); border-radius: 6px; padding:2px 6px; white-space: pre-wrap; word-break: break-word; }
+    a { color: #0c4a6e; text-underline-offset: 2px; }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>YouTube Link Review (58 items)</h1>
+      <div class="summary">
+        <span class="pill">score 3: 10</span>
+        <span class="pill">score 2: 25</span>
+        <span class="pill">score 1: 18</span>
+        <span class="pill">score 0: 4</span>
+        <span class="pill">missing: 1</span>
+      </div>
+      <div class="controls">
+        <button class="active" data-filter="all">All</button>
+        <button data-filter="missing">Missing</button>
+        <button data-filter="low">Low (<=1)</button>
+        <button data-filter="score0">Score 0</button>
+        <button data-filter="score1">Score 1</button>
+        <button data-filter="score2">Score 2</button>
+        <button data-filter="score3">Score 3</button>
+      </div>
+    </div>
+  </header>
+  <main class="wrap">
+    <section class="grid" id="grid">
+      
+<article class="card" data-score="2" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#1</span>
+      <span class="score good">score 2</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=6Y1P8bI_jPI" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/6Y1P8bI_jPI/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>검정치마</strong></div>
+    <div class="sub">TEAM BABY</div>
+    <div class="title">전곡</div>
+    <div class="line"><span>query</span><code>검정치마 TEAM BABY</code></div>
+    <div class="line"><span>matched</span><div>[풀앨범] 검정치마 - TEAM BABY</div></div>
+    <div class="line"><span>channel</span><div>Frism Musicwood</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=6Y1P8bI_jPI" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="2" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#2</span>
+      <span class="score good">score 2</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=XEsJiPdlsqI" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/XEsJiPdlsqI/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>검정치마</strong></div>
+    <div class="sub">TEEN TROUBLES</div>
+    <div class="title">전곡</div>
+    <div class="line"><span>query</span><code>검정치마 TEEN TROUBLES</code></div>
+    <div class="line"><span>matched</span><div>검정치마 (The Black Skirts) - TEEN TROUBLES | 전곡 듣기, Full Album</div></div>
+    <div class="line"><span>channel</span><div>음악맛집</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=XEsJiPdlsqI" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="0" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#3</span>
+      <span class="score low">score 0</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=A-Nqlz3eoKQ" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/A-Nqlz3eoKQ/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>이동수</strong></div>
+    <div class="sub">Solus</div>
+    <div class="title">전곡</div>
+    <div class="line"><span>query</span><code>이동수 Solus</code></div>
+    <div class="line"><span>matched</span><div>For nothing I stayed</div></div>
+    <div class="line"><span>channel</span><div>Lee Dongsoo - Topic</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=A-Nqlz3eoKQ" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="2" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#4</span>
+      <span class="score good">score 2</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=B4mLKcVIERs" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/B4mLKcVIERs/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>Boynextdoor</strong></div>
+    <div class="sub">the first take</div>
+    <div class="title">오늘만 I love you</div>
+    <div class="line"><span>query</span><code>Boynextdoor 오늘만 I love you</code></div>
+    <div class="line"><span>matched</span><div>BOYNEXTDOOR (보이넥스트도어) &#x27;오늘만 I LOVE YOU&#x27; Official MV</div></div>
+    <div class="line"><span>channel</span><div>-</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=B4mLKcVIERs" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="2" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#5</span>
+      <span class="score good">score 2</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=Dbxfo8YBkYE" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/Dbxfo8YBkYE/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>Boynextdoor</strong></div>
+    <div class="sub">the first take</div>
+    <div class="title">count to love</div>
+    <div class="line"><span>query</span><code>Boynextdoor count to love</code></div>
+    <div class="line"><span>matched</span><div>BOYNEXTDOOR (보이넥스트도어) &#x27;Count To Love&#x27; Official MV</div></div>
+    <div class="line"><span>channel</span><div>-</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=Dbxfo8YBkYE" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="2" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#6</span>
+      <span class="score good">score 2</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=qpwfm9bnDfY" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/qpwfm9bnDfY/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>국카스텐</strong></div>
+    <div class="sub">음악중심</div>
+    <div class="title">Kick out</div>
+    <div class="line"><span>query</span><code>국카스텐 Kick out</code></div>
+    <div class="line"><span>matched</span><div>Guckkasten (국카스텐) - KICK OUT | Show! MusicCore | MBC251220방송</div></div>
+    <div class="line"><span>channel</span><div>MBCkpop</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=qpwfm9bnDfY" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="2" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#7</span>
+      <span class="score good">score 2</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=Wxfgul-2gYs" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/Wxfgul-2gYs/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>마치한아</strong></div>
+    <div class="sub">별자리 항해</div>
+    <div class="title">봄을 향해 걷는 우리</div>
+    <div class="line"><span>query</span><code>마치한아 봄을 향해 걷는 우리</code></div>
+    <div class="line"><span>matched</span><div>마치한아 《봄을 향해 걷는 우리》 MV</div></div>
+    <div class="line"><span>channel</span><div>MarchHana</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=Wxfgul-2gYs" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="3" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#8</span>
+      <span class="score best">score 3</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=rWbOrlbhens" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/rWbOrlbhens/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>Miiro</strong></div>
+    <div class="sub">계절범죄</div>
+    <div class="title">계절범죄</div>
+    <div class="line"><span>query</span><code>Miiro 계절범죄</code></div>
+    <div class="line"><span>matched</span><div>Miiro 「계절범죄」 feat. 새빛 OFFICIAL MV</div></div>
+    <div class="line"><span>channel</span><div>Miiro</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=rWbOrlbhens" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="1" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#9</span>
+      <span class="score caution">score 1</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=LFNQXerBAMc" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/LFNQXerBAMc/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>아이린</strong></div>
+    <div class="sub">Like a flower</div>
+    <div class="title">summer rain,winter wish</div>
+    <div class="line"><span>query</span><code>아이린 summer rain</code></div>
+    <div class="line"><span>matched</span><div>Summer Rain</div></div>
+    <div class="line"><span>channel</span><div>IRENE - Topic</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=LFNQXerBAMc" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="2" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#10</span>
+      <span class="score good">score 2</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=zB7-gxzWPKM" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/zB7-gxzWPKM/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>정동원</strong></div>
+    <div class="sub">키다리의 선물</div>
+    <div class="title">(empty title)</div>
+    <div class="line"><span>query</span><code>정동원 키다리의 선물</code></div>
+    <div class="line"><span>matched</span><div>정동원 컴백 💚 정규 2집 앨범 [키다리의 선물] 전곡 듣기 | 흥!, Show up, Only U</div></div>
+    <div class="line"><span>channel</span><div>골든 트로트</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=zB7-gxzWPKM" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="2" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#11</span>
+      <span class="score good">score 2</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=H3Uuek2Bzts" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/H3Uuek2Bzts/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>SF9</strong></div>
+    <div class="sub">Love Race</div>
+    <div class="title">suited, no no no</div>
+    <div class="line"><span>query</span><code>SF9 suited</code></div>
+    <div class="line"><span>matched</span><div>Suited (Suited)</div></div>
+    <div class="line"><span>channel</span><div>SF9</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=H3Uuek2Bzts" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="2" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#12</span>
+      <span class="score good">score 2</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=JMFAIer3C-Q" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/JMFAIer3C-Q/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>82Major</strong></div>
+    <div class="sub">silence syndrome</div>
+    <div class="title">영웅호걸, I promise you</div>
+    <div class="line"><span>query</span><code>82Major 영웅호걸</code></div>
+    <div class="line"><span>matched</span><div>[최초 공개] 82MAJOR(에이티투메이저) - 영웅호걸 l Show Champion l EP.553 l 250430</div></div>
+    <div class="line"><span>channel</span><div>ALL THE K-POP</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=JMFAIer3C-Q" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="2" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#13</span>
+      <span class="score good">score 2</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=pk4t4K8eaYc" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/pk4t4K8eaYc/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>이문세</strong></div>
+    <div class="sub">마이 블루스</div>
+    <div class="title">이별에도 사랑이, 마이 블루스</div>
+    <div class="line"><span>query</span><code>이문세 이별에도 사랑이</code></div>
+    <div class="line"><span>matched</span><div>[Official MV] 이별에도 사랑이(Love Even in Goodbyes) - 이문세(Leemoonsae)</div></div>
+    <div class="line"><span>channel</span><div>이문세(Lee Moon Sae)</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=pk4t4K8eaYc" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="0" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#14</span>
+      <span class="score low">score 0</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=tVLVG4gh7_4" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/tVLVG4gh7_4/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>다비치</strong></div>
+    <div class="sub">stitch</div>
+    <div class="title">별 생각 없이 살아</div>
+    <div class="line"><span>query</span><code>다비치 별 생각 없이 살아</code></div>
+    <div class="line"><span>matched</span><div>Days After Days (별생각 없이 살아)</div></div>
+    <div class="line"><span>channel</span><div>DAVICHI</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=tVLVG4gh7_4" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="2" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#15</span>
+      <span class="score good">score 2</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=UhhNJ-6qEJA" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/UhhNJ-6qEJA/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>잔나비</strong></div>
+    <div class="sub">Monkey Hotel</div>
+    <div class="title">전곡</div>
+    <div class="line"><span>query</span><code>잔나비 Monkey Hotel</code></div>
+    <div class="line"><span>matched</span><div>MONKEY HOTEL (Finale)</div></div>
+    <div class="line"><span>channel</span><div>잔나비 JANNABI</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=UhhNJ-6qEJA" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="3" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#16</span>
+      <span class="score best">score 3</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=VFRrOFALKu4" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/VFRrOFALKu4/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>잔나비</strong></div>
+    <div class="sub">잔나비</div>
+    <div class="title">1,2,3,4,5,6,7,8,9</div>
+    <div class="line"><span>query</span><code>잔나비 1</code></div>
+    <div class="line"><span>matched</span><div>[SJING’s Playlist] 잔나비 정규 1집ㅣJANNABI MONKEY HOTELㅣFULL ALBUM 🐒</div></div>
+    <div class="line"><span>channel</span><div>스징이의 오두막 Sjing’s Hut</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=VFRrOFALKu4" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="1" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#17</span>
+      <span class="score caution">score 1</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=tknDwPAhZ14" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/tknDwPAhZ14/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>colde</strong></div>
+    <div class="sub">wave</div>
+    <div class="title">전곡</div>
+    <div class="line"><span>query</span><code>colde wave</code></div>
+    <div class="line"><span>matched</span><div>Sunflower</div></div>
+    <div class="line"><span>channel</span><div>콜드 Colde</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=tknDwPAhZ14" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="2" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#18</span>
+      <span class="score good">score 2</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=sMtTPAK3OLc" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/sMtTPAK3OLc/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>폴킴</strong></div>
+    <div class="sub">Sincerely yours</div>
+    <div class="title">전곡</div>
+    <div class="line"><span>query</span><code>폴킴 Sincerely yours</code></div>
+    <div class="line"><span>matched</span><div>폴킴 (Paul Kim) &#x27;Sincerely yours&#x27; PLAYLIST</div></div>
+    <div class="line"><span>channel</span><div>폴킴 Paul Kim Official</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=sMtTPAK3OLc" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="2" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#19</span>
+      <span class="score good">score 2</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=9jtrY5kWwJs" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/9jtrY5kWwJs/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>하현우</strong></div>
+    <div class="sub">킬링보이스</div>
+    <div class="title">(empty title)</div>
+    <div class="line"><span>query</span><code>하현우 킬링보이스</code></div>
+    <div class="line"><span>matched</span><div>하현우(Ha Hyunwoo)의 킬링보이스를 라이브로! - 나의 적, 이방인, Pulse, BACK, Miserere, 뿔, YOUR NAME, 항가, 붉은 밭, 도둑, 거울,돌덩이</div></div>
+    <div class="line"><span>channel</span><div>딩고 뮤직 / dingo music</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=9jtrY5kWwJs" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="0" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#20</span>
+      <span class="score low">score 0</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=-cJq6wCPM7o" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/-cJq6wCPM7o/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>엄마는아이돌</strong></div>
+    <div class="sub">tvn</div>
+    <div class="title">방송용 송출 믹스</div>
+    <div class="line"><span>query</span><code>엄마는아이돌 방송용 송출 믹스</code></div>
+    <div class="line"><span>matched</span><div>PLayLiST ✨ 먼지까지 춤추게 할 BGM! 청소할때 듣는 신나는 노래 플레이리스트 | 청소 비트 장전! 리듬 타며 털어보자.</div></div>
+    <div class="line"><span>channel</span><div>음악의발견</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=-cJq6wCPM7o" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="1" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#21</span>
+      <span class="score caution">score 1</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=kmwHW4u08h4" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/kmwHW4u08h4/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>잔나비</strong></div>
+    <div class="sub">전설</div>
+    <div class="title">나쁜꿈</div>
+    <div class="line"><span>query</span><code>잔나비 나쁜꿈</code></div>
+    <div class="line"><span>matched</span><div>bad dreams (나쁜 꿈)</div></div>
+    <div class="line"><span>channel</span><div>잔나비 JANNABI</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=kmwHW4u08h4" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="2" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#22</span>
+      <span class="score good">score 2</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=q0pYOhHpCWo" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/q0pYOhHpCWo/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>백야</strong></div>
+    <div class="sub">이야기집</div>
+    <div class="title">전곡</div>
+    <div class="line"><span>query</span><code>백야 이야기집</code></div>
+    <div class="line"><span>matched</span><div>[4K] 백야(BaekYa) - 이야기집(Story Book) Full Live Clip</div></div>
+    <div class="line"><span>channel</span><div>백야 BaekYa</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=q0pYOhHpCWo" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="2" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#23</span>
+      <span class="score good">score 2</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=Mxf-LdokGyc" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/Mxf-LdokGyc/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>유명종</strong></div>
+    <div class="sub">afterglow</div>
+    <div class="title">전곡</div>
+    <div class="line"><span>query</span><code>유명종 afterglow</code></div>
+    <div class="line"><span>matched</span><div>[FULL ALBUM] 유명종 - afterglow</div></div>
+    <div class="line"><span>channel</span><div>터질듯한 나의사랑</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=Mxf-LdokGyc" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="0" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#24</span>
+      <span class="score low">score 0</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=QvBRYlcYzR8" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/QvBRYlcYzR8/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>세븐틴 도겸X승관</strong></div>
+    <div class="sub">소야곡</div>
+    <div class="title">plelude of love</div>
+    <div class="line"><span>query</span><code>세븐틴 도겸X승관 plelude of love</code></div>
+    <div class="line"><span>matched</span><div>DK X Seungkwan (SEVENTEEN) &#x27;Prelude of love&#x27; Lyrics (도겸X승관 Prelude of love 가사) [Color Coded Lyrics]</div></div>
+    <div class="line"><span>channel</span><div>ShadowByYoongi</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=QvBRYlcYzR8" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="1" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#25</span>
+      <span class="score caution">score 1</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=HL2PQBk-86Y" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/HL2PQBk-86Y/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>세븐틴 도겸X승관</strong></div>
+    <div class="sub">소야곡</div>
+    <div class="title">dream serenade</div>
+    <div class="line"><span>query</span><code>세븐틴 도겸X승관 dream serenade</code></div>
+    <div class="line"><span>matched</span><div>Dream Serenade (SEUNGKWAN Solo)</div></div>
+    <div class="line"><span>channel</span><div>DxS (SEVENTEEN) - Topic</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=HL2PQBk-86Y" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="1" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#26</span>
+      <span class="score caution">score 1</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=x2sI7vcqilY" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/x2sI7vcqilY/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>세븐틴 도겸X승관</strong></div>
+    <div class="sub">소야곡</div>
+    <div class="title">Silence</div>
+    <div class="line"><span>query</span><code>세븐틴 도겸X승관 Silence</code></div>
+    <div class="line"><span>matched</span><div>DK X Seungkwan (SEVENTEEN) &#x27;Silence&#x27; Lyrics (도겸X승관 Silence 가사) [Color Coded Han_Rom_Eng]</div></div>
+    <div class="line"><span>channel</span><div>ShadowByYoongi</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=x2sI7vcqilY" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="1" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#27</span>
+      <span class="score caution">score 1</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=vrEAq5NPVJg" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/vrEAq5NPVJg/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>세븐틴 도겸X승관</strong></div>
+    <div class="sub">소야곡</div>
+    <div class="title">Guilty Pleasure</div>
+    <div class="line"><span>query</span><code>세븐틴 도겸X승관 Guilty Pleasure</code></div>
+    <div class="line"><span>matched</span><div>DK X Seungkwan (SEVENTEEN) &#x27;Guilty Pleasure&#x27; Lyrics (도겸X승관 Guilty Pleasure 가사) [Color Coded Lyrics]</div></div>
+    <div class="line"><span>channel</span><div>ShadowByYoongi</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=vrEAq5NPVJg" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="2" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#28</span>
+      <span class="score good">score 2</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=01R62JW9X6Y" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/01R62JW9X6Y/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>Enhypen</strong></div>
+    <div class="sub">THE SIN : VANISH</div>
+    <div class="title">Big girls Don&#x27;t Cry</div>
+    <div class="line"><span>query</span><code>Enhypen Big girls Don&#x27;t Cry</code></div>
+    <div class="line"><span>matched</span><div>ENHYPEN (엔하이픈) &#x27;Big Girls Don&#x27;t Cry&#x27; MV</div></div>
+    <div class="line"><span>channel</span><div>ENHYPEN</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=01R62JW9X6Y" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="2" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#29</span>
+      <span class="score good">score 2</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=musv08G6-3U" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/musv08G6-3U/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>Enhypen</strong></div>
+    <div class="sub">THE SIN : VANISH</div>
+    <div class="title">Sleep Tight</div>
+    <div class="line"><span>query</span><code>Enhypen Sleep Tight</code></div>
+    <div class="line"><span>matched</span><div>Sleep Tight</div></div>
+    <div class="line"><span>channel</span><div>ENHYPEN</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=musv08G6-3U" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="2" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#30</span>
+      <span class="score good">score 2</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=Yk2H4qOmFEs" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/Yk2H4qOmFEs/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>김동수</strong></div>
+    <div class="sub">구멍</div>
+    <div class="title">전곡</div>
+    <div class="line"><span>query</span><code>김동수 구멍</code></div>
+    <div class="line"><span>matched</span><div>[M/V] 김동수 (Kim Dong Soo) - 구멍</div></div>
+    <div class="line"><span>channel</span><div>김동수</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=Yk2H4qOmFEs" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="1" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#31</span>
+      <span class="score caution">score 1</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=CjceKHus0R0" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/CjceKHus0R0/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>colde</strong></div>
+    <div class="sub">Love part.1</div>
+    <div class="title">전곡</div>
+    <div class="line"><span>query</span><code>colde Love part.1</code></div>
+    <div class="line"><span>matched</span><div>Colde (콜드) - Love Part 1 (full album) 앨범</div></div>
+    <div class="line"><span>channel</span><div>404wave</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=CjceKHus0R0" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="1" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#32</span>
+      <span class="score caution">score 1</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=C0puxFMBLHw" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/C0puxFMBLHw/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>최유리</strong></div>
+    <div class="sub">오랜만이야</div>
+    <div class="title">오랜만이야</div>
+    <div class="line"><span>query</span><code>최유리 오랜만이야</code></div>
+    <div class="line"><span>matched</span><div>최유리 - 오랜만이야 [Music Video]</div></div>
+    <div class="line"><span>channel</span><div>최유리 Choi Yu Ree</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=C0puxFMBLHw" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="1" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#33</span>
+      <span class="score caution">score 1</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=dXAzSivUKSQ" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/dXAzSivUKSQ/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>최유리</strong></div>
+    <div class="sub">오랜만이야</div>
+    <div class="title">마지막 날</div>
+    <div class="line"><span>query</span><code>최유리 마지막 날</code></div>
+    <div class="line"><span>matched</span><div>최유리 - 마지막 날 (Live)</div></div>
+    <div class="line"><span>channel</span><div>최유리 Choi Yu Ree</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=dXAzSivUKSQ" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="2" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#34</span>
+      <span class="score good">score 2</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=EW3aVVwU7a0" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/EW3aVVwU7a0/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>최유리</strong></div>
+    <div class="sub">746</div>
+    <div class="title">전곡</div>
+    <div class="line"><span>query</span><code>최유리 746</code></div>
+    <div class="line"><span>matched</span><div>[Full Album] 최유리(Choi Yuree) ‘746 - The 1st Album’ Tracklist(2024.10.28.)</div></div>
+    <div class="line"><span>channel</span><div>STRAWBERRY  KPOP</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=EW3aVVwU7a0" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="1" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#35</span>
+      <span class="score caution">score 1</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=jrMeTJILPa4" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/jrMeTJILPa4/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>최유리</strong></div>
+    <div class="sub">외로움이란 건</div>
+    <div class="title">외로움이란 건</div>
+    <div class="line"><span>query</span><code>최유리 외로움이란 건</code></div>
+    <div class="line"><span>matched</span><div>최유리 - 외로움이라는 건 (Live)</div></div>
+    <div class="line"><span>channel</span><div>최유리 Choi Yu Ree</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=jrMeTJILPa4" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="1" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#36</span>
+      <span class="score caution">score 1</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=qyDV9-ZiH4c" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/qyDV9-ZiH4c/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>최유리</strong></div>
+    <div class="sub">미지의 서울 ost Pt.1</div>
+    <div class="title">노란 봄</div>
+    <div class="line"><span>query</span><code>최유리 노란 봄</code></div>
+    <div class="line"><span>matched</span><div>최유리 - 노란봄 (미지의 서울 OST) (Live)</div></div>
+    <div class="line"><span>channel</span><div>최유리 Choi Yu Ree</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=qyDV9-ZiH4c" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="1" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#37</span>
+      <span class="score caution">score 1</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=BAByJ7PdNew" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/BAByJ7PdNew/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>최유리</strong></div>
+    <div class="sub">노래</div>
+    <div class="title">잠수</div>
+    <div class="line"><span>query</span><code>최유리 잠수</code></div>
+    <div class="line"><span>matched</span><div>최유리 - 잠수 (Live)</div></div>
+    <div class="line"><span>channel</span><div>최유리 Choi Yu Ree</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=BAByJ7PdNew" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="2" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#38</span>
+      <span class="score good">score 2</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=vSBFeXJfO6s" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/vSBFeXJfO6s/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>최유리</strong></div>
+    <div class="sub">노래</div>
+    <div class="title">세상아 동화처럼</div>
+    <div class="line"><span>query</span><code>최유리 세상아 동화처럼</code></div>
+    <div class="line"><span>matched</span><div>최유리 - 세상아 동화처럼 [Official Lyric Video]</div></div>
+    <div class="line"><span>channel</span><div>최유리 Choi Yu Ree</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=vSBFeXJfO6s" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="2" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#39</span>
+      <span class="score good">score 2</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=l9JHmsqq-TM" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/l9JHmsqq-TM/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>최유리</strong></div>
+    <div class="sub">머무름, 하나</div>
+    <div class="title">전곡</div>
+    <div class="line"><span>query</span><code>최유리 머무름, 하나</code></div>
+    <div class="line"><span>matched</span><div>ғᴜʟʟ ᴀʟʙᴜᴍ｜최유리 - 머무름, 하나 앨범 전곡듣기</div></div>
+    <div class="line"><span>channel</span><div>옝플리 yengplaylist</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=l9JHmsqq-TM" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="3" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#41</span>
+      <span class="score best">score 3</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=0K80dW-6hZA" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/0K80dW-6hZA/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>김레전드</strong></div>
+    <div class="sub">이별을 노래로 만들어 보았습니다</div>
+    <div class="title">이별을 노래로 만들어 보았습니다</div>
+    <div class="line"><span>query</span><code>김레전드 이별을 노래로 만들어 보았습니다</code></div>
+    <div class="line"><span>matched</span><div>김레전드 (KIM LEGEND) &#x27;이별을 노래로 만들어 보았습니다(이노만보)&#x27; MV | Official</div></div>
+    <div class="line"><span>channel</span><div>Dreamus Music</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=0K80dW-6hZA" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="3" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#45</span>
+      <span class="score best">score 3</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=-F9zsez4vRA" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/-F9zsez4vRA/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>폴킴</strong></div>
+    <div class="sub">Have a good time</div>
+    <div class="title">Have a good time</div>
+    <div class="line"><span>query</span><code>폴킴 Have a good time</code></div>
+    <div class="line"><span>matched</span><div>폴킴, 우기 (YUQI) &#x27;Have A Good Time&#x27; | MV</div></div>
+    <div class="line"><span>channel</span><div>폴킴 Paul Kim Official</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=-F9zsez4vRA" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="3" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#46</span>
+      <span class="score best">score 3</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=Vk91IJyZJ6k" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/Vk91IJyZJ6k/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>폴킴</strong></div>
+    <div class="sub">Dream (베일드뮤지션 X 폴킴 with 감일동 솜사탕)</div>
+    <div class="title">Dream (베일드뮤지션 X 폴킴 with 감일동 솜사탕)</div>
+    <div class="line"><span>query</span><code>폴킴 Dream (베일드뮤지션 X 폴킴 with 감일동 솜사탕)</code></div>
+    <div class="line"><span>matched</span><div>[R&amp;B] Paul Kim(폴킴) - Dream (베일드뮤지션 X 폴킴 with 감일동 솜사탕)  | 🎭 베일드 뮤지션</div></div>
+    <div class="line"><span>channel</span><div>MUSIC&amp;NEW 뮤직앤뉴</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=Vk91IJyZJ6k" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="2" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#47</span>
+      <span class="score good">score 2</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=CzbfP7rzwqQ" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/CzbfP7rzwqQ/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>폴킴</strong></div>
+    <div class="sub">마지막 썸머 ost</div>
+    <div class="title">비라도 내렸으면 좋겠어</div>
+    <div class="line"><span>query</span><code>폴킴 비라도 내렸으면 좋겠어</code></div>
+    <div class="line"><span>matched</span><div>[마지막 썸머 (Last Summer) OST] 폴킴 (Paul Kim) - 비라도 내렸으면 좋겠어 (Summer End) MV</div></div>
+    <div class="line"><span>channel</span><div>Stone Music Entertainment</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=CzbfP7rzwqQ" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="3" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#48</span>
+      <span class="score best">score 3</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=AGBQVj0SJKc" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/AGBQVj0SJKc/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>폴킴</strong></div>
+    <div class="sub">지금 이대로도 좋아</div>
+    <div class="title">지금 이대로도 좋아</div>
+    <div class="line"><span>query</span><code>폴킴 지금 이대로도 좋아</code></div>
+    <div class="line"><span>matched</span><div>Paul Kim (폴킴) - 지금 이대로도 좋아 (Beyond the sunset) [가사]</div></div>
+    <div class="line"><span>channel</span><div>Music Time | 뮤직 타임</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=AGBQVj0SJKc" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="2" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#49</span>
+      <span class="score good">score 2</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=d4xDQDzK5hM" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/d4xDQDzK5hM/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>폴킴</strong></div>
+    <div class="sub">지금 이대로도 좋아</div>
+    <div class="title">마음의 여행</div>
+    <div class="line"><span>query</span><code>폴킴 마음의 여행</code></div>
+    <div class="line"><span>matched</span><div>[Live Clip] 폴킴 (Paul Kim) - 마음의 여행 @2025 Paul Kim Concert &#x27;Pauliday&#x27;</div></div>
+    <div class="line"><span>channel</span><div>폴킴 Paul Kim Official</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=d4xDQDzK5hM" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="3" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#50</span>
+      <span class="score best">score 3</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=ZsbEOJ37TX4" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/ZsbEOJ37TX4/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>폴킴</strong></div>
+    <div class="sub">君に会い (Me After You)</div>
+    <div class="title">君に会い (Me After You)</div>
+    <div class="line"><span>query</span><code>폴킴 君に会い (Me After You)</code></div>
+    <div class="line"><span>matched</span><div>폴킴 (Paul Kim) &#x27;君に会い (Me After You)&#x27; | MV</div></div>
+    <div class="line"><span>channel</span><div>폴킴 Paul Kim Official</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=ZsbEOJ37TX4" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="2" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#51</span>
+      <span class="score good">score 2</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=KqD-oIUB4xg" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/KqD-oIUB4xg/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>폴킴</strong></div>
+    <div class="sub">나의 완벽한 비서 ost</div>
+    <div class="title">내가 널 지켜줄게</div>
+    <div class="line"><span>query</span><code>폴킴 내가 널 지켜줄게</code></div>
+    <div class="line"><span>matched</span><div>[Official Lyric Video] 폴킴 (Paul Kim) - 내가 널 지켜줄게 (Always be with you)</div></div>
+    <div class="line"><span>channel</span><div>SBS Catch</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=KqD-oIUB4xg" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="2" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#52</span>
+      <span class="score good">score 2</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=mvVzdTX0yVs" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/mvVzdTX0yVs/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>폴킴</strong></div>
+    <div class="sub">눈물의 여왕 ost</div>
+    <div class="title">좋아해요</div>
+    <div class="line"><span>query</span><code>폴킴 좋아해요</code></div>
+    <div class="line"><span>matched</span><div>좋아해요</div></div>
+    <div class="line"><span>channel</span><div>폴킴 Paul Kim Official</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=mvVzdTX0yVs" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="1" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#53</span>
+      <span class="score caution">score 1</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=ha7i16DoKQY" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/ha7i16DoKQY/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>최유리</strong></div>
+    <div class="sub">초봄</div>
+    <div class="title">초봄</div>
+    <div class="line"><span>query</span><code>최유리 초봄</code></div>
+    <div class="line"><span>matched</span><div>최유리 - 초봄 [Music Video]</div></div>
+    <div class="line"><span>channel</span><div>최유리 Choi Yu Ree</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=ha7i16DoKQY" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="1" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#54</span>
+      <span class="score caution">score 1</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=siuwAr675WM" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/siuwAr675WM/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>써니사이드</strong></div>
+    <div class="sub">봄의편지</div>
+    <div class="title">봄의편지</div>
+    <div class="line"><span>query</span><code>써니사이드 봄의편지</code></div>
+    <div class="line"><span>matched</span><div>MJ (써니사이드) - 봄의 편지 (feat. 류민희) [Lyric Video]</div></div>
+    <div class="line"><span>channel</span><div>MJ SUNNY SIDE</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=siuwAr675WM" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="-1" data-missing="1">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#55</span>
+      <span class="score missing">score -1</span>
+    </div>
+  </div>
+  <div class="thumb missing">NO LINK</div>
+  <div class="meta">
+    <div><strong>폴킴</strong></div>
+    <div class="sub">예나-물음표(feat.폴킴)</div>
+    <div class="title">예나-물음표(feat.폴킴)</div>
+    <div class="line"><span>query</span><code>폴킴 예나-물음표(feat.폴킴)</code></div>
+    <div class="line"><span>matched</span><div>-</div></div>
+    <div class="line"><span>channel</span><div>-</div></div>
+    <div class="line"><span>url</span><em>missing</em></div>
+  </div>
+</article>
+
+<article class="card" data-score="3" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#56</span>
+      <span class="score best">score 3</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=Q7-f9voDpN8" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/Q7-f9voDpN8/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>김기태</strong></div>
+    <div class="sub">만취</div>
+    <div class="title">만취</div>
+    <div class="line"><span>query</span><code>김기태 만취</code></div>
+    <div class="line"><span>matched</span><div>[Behind Vocal] 사자 보이스 김기태, 다음 이야기 &#x27;만취&#x27; 티저 쌩보컬 비하인드 공개</div></div>
+    <div class="line"><span>channel</span><div>더블엑스엔터테인먼트 xxentertainment</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=Q7-f9voDpN8" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="3" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#57</span>
+      <span class="score best">score 3</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=SuckyCrL5uw" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/SuckyCrL5uw/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>미유</strong></div>
+    <div class="sub">내가 아줌마가 되어도</div>
+    <div class="title">내가 아줌마가 되어도</div>
+    <div class="line"><span>query</span><code>미유 내가 아줌마가 되어도</code></div>
+    <div class="line"><span>matched</span><div>미유(かのうみゆ) - 내가 아줌마가 되어도(私がオバさんになっても)｜한일톱텐쇼 5회</div></div>
+    <div class="line"><span>channel</span><div>MBN MUSIC</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=SuckyCrL5uw" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="1" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#58</span>
+      <span class="score caution">score 1</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=GrzPs0nEXCI" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/GrzPs0nEXCI/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>이현</strong></div>
+    <div class="sub">딩고 - 킬링보이스</div>
+    <div class="title">딩고 - 킬링보이스</div>
+    <div class="line"><span>query</span><code>이현 딩고 - 킬링보이스</code></div>
+    <div class="line"><span>matched</span><div>이현 (Lee Hyun)의 킬링보이스를 라이브로! – 밥만 잘 먹더라, 내꺼중에 최고, 잘가요 내사랑, 심장이 없어, 이쯤에서 널 | 딩고뮤직 | Dingo Music</div></div>
+    <div class="line"><span>channel</span><div>딩고 뮤직 / dingo music</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=GrzPs0nEXCI" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="3" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#59</span>
+      <span class="score best">score 3</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=gH4gPjidPgg" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/gH4gPjidPgg/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>이현</strong></div>
+    <div class="sub">리무진서비스</div>
+    <div class="title">리무진서비스</div>
+    <div class="line"><span>query</span><code>이현 리무진서비스</code></div>
+    <div class="line"><span>matched</span><div>[리무진서비스] EP.191 베이비돈크라이 이현 | Baby DONT Cry Yihyun | F Girl, Whatever You Do, 연애조건, Kiss Me</div></div>
+    <div class="line"><span>channel</span><div>KBS Kpop</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=gH4gPjidPgg" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="1" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#60</span>
+      <span class="score caution">score 1</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=zvN5L_m9oxA" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/zvN5L_m9oxA/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>TWS 경민</strong></div>
+    <div class="sub">24/7,365</div>
+    <div class="title">24/7,365</div>
+    <div class="line"><span>query</span><code>TWS 경민 24/7</code></div>
+    <div class="line"><span>matched</span><div>24/7, 365🌳</div></div>
+    <div class="line"><span>channel</span><div>TWS</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=zvN5L_m9oxA" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="1" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#61</span>
+      <span class="score caution">score 1</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=EKrsvC7XxhE" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/EKrsvC7XxhE/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>Enhypen</strong></div>
+    <div class="sub">One in a billion(JP)</div>
+    <div class="title">One in a billion(JP)</div>
+    <div class="line"><span>query</span><code>Enhypen One in a billion(JP)</code></div>
+    <div class="line"><span>matched</span><div>One In A Billion (Japanese Ver.)</div></div>
+    <div class="line"><span>channel</span><div>ENHYPEN</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=EKrsvC7XxhE" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+<article class="card" data-score="1" data-missing="0">
+  <div class="card-head">
+    <div class="meta-left">
+      <span class="row">#62</span>
+      <span class="score caution">score 1</span>
+    </div>
+  </div>
+  <a class="thumb-link" href="https://www.youtube.com/watch?v=473nQeRjOvc" target="_blank" rel="noreferrer"><img class="thumb" src="https://img.youtube.com/vi/473nQeRjOvc/hqdefault.jpg" loading="lazy" alt="thumbnail"/></a>
+  <div class="meta">
+    <div><strong>성호(boynextdoor)</strong></div>
+    <div class="sub">초속5센티미터 x 성호</div>
+    <div class="title">one more time, one more chance</div>
+    <div class="line"><span>query</span><code>성호(boynextdoor) one more time</code></div>
+    <div class="line"><span>matched</span><div>[SPECIAL CLIP] 성호 (BOYNEXTDOOR) - One more time, One more chance :: 초속 5센티미터 X 성호 (BOYNEXTDOOR)</div></div>
+    <div class="line"><span>channel</span><div>모스트콘텐츠 MOSTCONTENTS</div></div>
+    <div class="line"><span>url</span><a href="https://www.youtube.com/watch?v=473nQeRjOvc" target="_blank" rel="noreferrer">open</a></div>
+  </div>
+</article>
+
+    </section>
+  </main>
+  <script>
+    const btns=[...document.querySelectorAll('button[data-filter]')];
+    const cards=[...document.querySelectorAll('.card')];
+    function apply(filter) {
+      cards.forEach(card=>{
+        const score=card.dataset.score;
+        const missing=card.dataset.missing==='1';
+        let show=true;
+        if(filter==='missing') show=missing;
+        if(filter==='low') show=(score==='-1'||score==='0'||score==='1');
+        if(filter==='score0') show=(score==='0');
+        if(filter==='score1') show=(score==='1');
+        if(filter==='score2') show=(score==='2');
+        if(filter==='score3') show=(score==='3');
+        card.classList.toggle('hidden', !show);
+      });
+      btns.forEach(b=>b.classList.toggle('active', b.dataset.filter===filter));
+    }
+    btns.forEach(btn=>btn.addEventListener('click',()=>apply(btn.dataset.filter)));
+  </script>
+</body>
+</html>
