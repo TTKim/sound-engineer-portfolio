@@ -23,8 +23,16 @@ import requests
 ROOT = Path(__file__).resolve().parent
 CSV_PATH = ROOT / "Portfolio_list.csv"
 OUTPUT_PATH = ROOT / "portfolio_media_map.json"
+MELON_CSV_PATH = ROOT / "Portfolio_list_with_melon.csv"
 YTDLP_PATH = Path.home() / "Library" / "Python" / "3.9" / "bin" / "yt-dlp"
 ENABLE_YT_SEARCH = os.getenv("ENABLE_YT_SEARCH", "").strip().lower() in {"1", "true", "yes"}
+MANUAL_ALBUM_COVER_OVERRIDES = {
+    "잔나비|구여친클럽 ost": "https://is1-ssl.mzstatic.com/image/thumb/Music7/v4/7a/e8/3e/7ae83e8c-c5c1-5ac1-f674-226026046b43/JA.jpg/600x600bb.jpg",
+    "잔나비|두번째 스무살 ost": "https://is1-ssl.mzstatic.com/image/thumb/Music6/v4/bb/76/d4/bb76d4b0-8c3a-6096-5f28-b54874452e58/jancover.jpg/600x600bb.jpg",
+    "잔나비|디어 마이 프렌즈 ost": "https://is1-ssl.mzstatic.com/image/thumb/Music125/v4/65/f8/46/65f8464c-1c2a-0bb9-67ad-173869873bd2/20165201516391.jpg/600x600bb.jpg",
+    "잔나비|혼술남녀 ost": "https://is1-ssl.mzstatic.com/image/thumb/Music211/v4/9c/a3/c6/9ca3c65d-7a6a-682d-b05a-452ea772b2a1/8809484118353_Cover.jpg/1200x630wp-60.jpg",
+    "잔나비|she": "https://is1-ssl.mzstatic.com/image/thumb/Music118/v4/4b/8c/0f/4b8c0f1e-472e-732b-8dd8-f4a690ef95db/cover-_DS.jpg/1200x630wp-60.jpg",
+}
 
 
 def normalize(value: str) -> str:
@@ -60,6 +68,10 @@ def to_canonical_youtube_url(value: str) -> str:
     return f"https://www.youtube.com/watch?v={video_id}" if video_id else ""
 
 
+def make_album_key(artist: str, album: str) -> str:
+    return f"{normalize(artist)}|{normalize(album)}"
+
+
 @dataclass
 class MediaMatch:
     artist: str
@@ -73,6 +85,40 @@ class MediaMatch:
     youtube_url: str = ""
     youtube_thumbnail: str = ""
     cover_url: str = ""
+
+
+def load_existing_media() -> Dict[str, Dict[str, str]]:
+    if not OUTPUT_PATH.exists():
+        return {}
+    try:
+        payload = json.loads(OUTPUT_PATH.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+    items = payload.get("items") or []
+    return {item.get("key", ""): item for item in items if item.get("key")}
+
+
+def load_melon_album_fallbacks() -> Dict[str, Dict[str, str]]:
+    if not MELON_CSV_PATH.exists():
+        return {}
+    with MELON_CSV_PATH.open("r", encoding="utf-8-sig", newline="") as f:
+        reader = csv.DictReader(f)
+        fallbacks = {}
+        for raw in reader:
+            artist = (raw.get("Artist") or "").strip()
+            album = (raw.get("Album") or "").strip()
+            if not artist or not album:
+                continue
+            album_key = make_album_key(artist, album)
+            current = fallbacks.get(album_key, {})
+            cover = (raw.get("CoverImageURL") or "").strip()
+            youtube_url = to_canonical_youtube_url((raw.get("YoutubeURL") or "").strip())
+            if cover and not current.get("cover_url"):
+                current["cover_url"] = cover
+            if youtube_url and not current.get("youtube_url"):
+                current["youtube_url"] = youtube_url
+            fallbacks[album_key] = current
+    return fallbacks
 
 
 def run_yt_search(query: str) -> Dict[str, str]:
@@ -163,6 +209,24 @@ def run_cover_search(artist: str, album: str, title: str) -> str:
 
 
 def build_matches() -> List[MediaMatch]:
+    existing_by_key = load_existing_media()
+    melon_by_album = load_melon_album_fallbacks()
+    existing_album_cache: Dict[str, Dict[str, str]] = {}
+    cover_cache: Dict[str, str] = {}
+    youtube_cache: Dict[str, Dict[str, str]] = {}
+
+    for item in existing_by_key.values():
+        album_key = make_album_key(item.get("artist", ""), item.get("album", ""))
+        if not album_key:
+            continue
+        cached = existing_album_cache.setdefault(album_key, {})
+        if item.get("cover_url") and not cached.get("cover_url"):
+            cached["cover_url"] = item["cover_url"]
+        if item.get("youtube_url") and not cached.get("youtube_url"):
+            cached["youtube_url"] = item["youtube_url"]
+        if item.get("youtube_thumbnail") and not cached.get("youtube_thumbnail"):
+            cached["youtube_thumbnail"] = item["youtube_thumbnail"]
+
     rows: List[MediaMatch] = []
     with CSV_PATH.open("r", encoding="utf-8-sig", newline="") as f:
         reader = csv.DictReader(f)
@@ -184,9 +248,43 @@ def build_matches() -> List[MediaMatch]:
                 note=note,
                 key=make_key(artist, album, title),
             )
+            album_key = make_album_key(artist, album)
+            exact_existing = existing_by_key.get(item.key, {})
+            album_existing = existing_album_cache.get(album_key, {})
+            melon_fallback = melon_by_album.get(album_key, {})
 
             source_url = youtube_url or (title if is_youtube_url(title) else "")
-            yt = fetch_youtube_oembed(source_url) if source_url else {}
+            yt = {}
+            if exact_existing.get("youtube_id") or exact_existing.get("youtube_url"):
+                yt = {
+                    "youtube_id": exact_existing.get("youtube_id", ""),
+                    "youtube_title": exact_existing.get("youtube_title", ""),
+                    "youtube_url": exact_existing.get("youtube_url", ""),
+                    "youtube_thumbnail": exact_existing.get("youtube_thumbnail", ""),
+                }
+            elif source_url:
+                canonical_source = to_canonical_youtube_url(source_url)
+                if canonical_source in youtube_cache:
+                    yt = youtube_cache[canonical_source]
+                else:
+                    yt = fetch_youtube_oembed(source_url)
+                    youtube_cache[canonical_source] = yt
+            elif album_existing.get("youtube_url"):
+                yt = {
+                    "youtube_id": extract_youtube_id(album_existing.get("youtube_url", "")),
+                    "youtube_title": album_existing.get("youtube_title", ""),
+                    "youtube_url": album_existing.get("youtube_url", ""),
+                    "youtube_thumbnail": album_existing.get("youtube_thumbnail", ""),
+                }
+            elif melon_fallback.get("youtube_url"):
+                yt_url = melon_fallback["youtube_url"]
+                yt = {
+                    "youtube_id": extract_youtube_id(yt_url),
+                    "youtube_title": "",
+                    "youtube_url": yt_url,
+                    "youtube_thumbnail": f"https://img.youtube.com/vi/{extract_youtube_id(yt_url)}/hqdefault.jpg" if extract_youtube_id(yt_url) else "",
+                }
+
             if not yt:
                 query_parts = [artist]
                 if title and not is_youtube_url(title):
@@ -200,7 +298,20 @@ def build_matches() -> List[MediaMatch]:
             item.youtube_title = yt.get("youtube_title", "")
             item.youtube_url = yt.get("youtube_url", "")
             item.youtube_thumbnail = yt.get("youtube_thumbnail", "")
-            item.cover_url = run_cover_search(artist, album, title)
+            if exact_existing.get("cover_url"):
+                item.cover_url = exact_existing["cover_url"]
+            elif MANUAL_ALBUM_COVER_OVERRIDES.get(album_key):
+                item.cover_url = MANUAL_ALBUM_COVER_OVERRIDES[album_key]
+            elif melon_fallback.get("cover_url"):
+                item.cover_url = melon_fallback["cover_url"]
+            elif album_existing.get("cover_url"):
+                item.cover_url = album_existing["cover_url"]
+            else:
+                cached_cover = cover_cache.get(album_key)
+                if cached_cover is None:
+                    cached_cover = run_cover_search(artist, album, title)
+                    cover_cache[album_key] = cached_cover
+                item.cover_url = cached_cover or ""
 
             rows.append(item)
             print(f"Matched: {artist} | {title or '(no title)'}")
