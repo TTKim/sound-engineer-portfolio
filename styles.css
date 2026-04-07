@@ -504,6 +504,20 @@ main {
     font-size: 0.92rem;
 }
 
+.card-album {
+    margin-top: 8px;
+    color: #1f5050;
+    font-size: 0.86rem;
+    font-weight: 700;
+}
+
+.card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+
 .card-description {
     color: #66666c;
     margin-top: 10px;
@@ -516,10 +530,10 @@ main {
 }
 
 .song-count,
-.card-genre {
+.card-genre,
+.card-work {
     display: inline-flex;
     align-items: center;
-    margin-top: 12px;
     border-radius: 999px;
     font-size: 0.76rem;
     font-weight: 700;
@@ -535,6 +549,11 @@ main {
 .card-genre {
     color: #42352a;
     background: #f2e6d7;
+}
+
+.card-work {
+    color: #0f766e;
+    background: rgba(15, 118, 110, 0.12);
 }
 
 .back-button {
@@ -574,6 +593,30 @@ main {
 .artist-header p {
     color: var(--ink-2);
     line-height: 1.6;
+}
+
+.album-section-header {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 6px;
+    padding: 6px 4px 0;
+    border-top: 1px solid rgba(31, 31, 32, 0.1);
+}
+
+.album-section-title {
+    font-family: 'Space Grotesk', 'Noto Sans KR', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #171719;
+}
+
+.album-section-meta {
+    color: #5b6666;
+    font-size: 0.84rem;
+    font-weight: 700;
 }
 
 .modal {

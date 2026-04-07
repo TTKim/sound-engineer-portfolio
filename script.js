@@ -197,7 +197,7 @@ const fallbackArtistsData = {
 
 let artistsData = JSON.parse(JSON.stringify(fallbackArtistsData));
 let mediaMatchMap = {};
-const ASSET_VERSION = '20260308b';
+const ASSET_VERSION = '20260408a';
 
 function withVersionParam(path) {
     return `${path}?v=${ASSET_VERSION}`;
@@ -1372,6 +1372,8 @@ function createSongCard(song) {
     const card = document.createElement('div');
     card.className = 'music-card';
     card.dataset.musicId = song.id;
+    const albumLabel = String(song.album || '').trim();
+    const workLabel = String(song.workDisplay || '').trim();
     
     card.innerHTML = `
         <div class="card-thumbnail">
@@ -1380,7 +1382,11 @@ function createSongCard(song) {
         <div class="card-info">
             <div class="card-title">${song.title}</div>
             <div class="card-artist">${song.artist}</div>
-            <span class="card-genre">${song.genre}</span>
+            ${albumLabel ? `<div class="card-album">${albumLabel}</div>` : ''}
+            <div class="card-tags">
+                ${workLabel ? `<span class="card-work">${workLabel}</span>` : ''}
+                <span class="card-genre">${song.genre}</span>
+            </div>
         </div>
     `;
     
@@ -1448,10 +1454,28 @@ function showArtistSongs(artistName, options = {}) {
     `;
     grid.appendChild(artistHeader);
     
-    // 노래 카드 생성
+    const songsByAlbum = new Map();
     artist.songs.forEach(song => {
-        const card = createSongCard({ ...song, artist: artist.name });
-        grid.appendChild(card);
+        const albumName = String(song.album || '').trim() || '기타 작업';
+        if (!songsByAlbum.has(albumName)) {
+            songsByAlbum.set(albumName, []);
+        }
+        songsByAlbum.get(albumName).push(song);
+    });
+
+    songsByAlbum.forEach((songs, albumName) => {
+        const sectionHeader = document.createElement('div');
+        sectionHeader.className = 'album-section-header';
+        sectionHeader.innerHTML = `
+            <div class="album-section-title">${albumName}</div>
+            <div class="album-section-meta">${songs.length}곡</div>
+        `;
+        grid.appendChild(sectionHeader);
+
+        songs.forEach(song => {
+            const card = createSongCard({ ...song, artist: artist.name });
+            grid.appendChild(card);
+        });
     });
 
     if (pushHistory) {
