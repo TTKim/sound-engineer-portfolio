@@ -197,7 +197,7 @@ const fallbackArtistsData = {
 
 let artistsData = JSON.parse(JSON.stringify(fallbackArtistsData));
 let mediaMatchMap = {};
-const ASSET_VERSION = '20260408a';
+const ASSET_VERSION = '20260409a';
 
 function withVersionParam(path) {
     return `${path}?v=${ASSET_VERSION}`;
@@ -1322,13 +1322,14 @@ function showCategorySongs(category, options = {}) {
     const { pushHistory = true } = options;
     const categoryGroups = getSongsByCategory();
     const songs = categoryGroups[category] || [];
+    const displayGroups = groupSongsByAlbumForCategory(songs);
     
     closeModalIfOpen();
     currentFilter = 'category';
     currentView = 'songs';
     currentArtist = category;
     setActiveFilterTab(currentFilter);
-    updateViewIntro(`${category} 작업물`, `${songs.length}곡을 작업 유형 기준으로 보여줍니다.`);
+    updateViewIntro(`${category} 작업물`, `${songs.length}곡을 ${displayGroups.length}개 카드로 묶어 보여줍니다.`);
     updateHeaderMeta(`작업유형: ${category}`);
     
     const grid = document.getElementById('portfolioGrid');
@@ -1349,13 +1350,14 @@ function showCategorySongs(category, options = {}) {
     categoryHeader.className = 'artist-header';
     categoryHeader.innerHTML = `
         <h2>${category}</h2>
-        <p>${songs.length}곡</p>
+        <p>${songs.length}곡 · ${displayGroups.length}개 카드</p>
     `;
     grid.appendChild(categoryHeader);
     
-    // 노래 카드 생성
-    songs.forEach(song => {
-        const card = createSongCard(song);
+    displayGroups.forEach(group => {
+        const card = group.type === 'album'
+            ? createCategoryAlbumCard(group, category)
+            : createSongCard(group.song);
         grid.appendChild(card);
     });
 
@@ -1365,6 +1367,112 @@ function showCategorySongs(category, options = {}) {
         }
         pushNavState(createSongsNavState('category', 'category', category));
     }
+}
+
+function groupSongsByAlbumForCategory(songs) {
+    const groups = [];
+    const albumGroups = new Map();
+
+    songs.forEach(song => {
+        const albumLabel = String(song.album || '').trim();
+        if (!albumLabel) {
+            groups.push({ type: 'song', song });
+            return;
+        }
+
+        const key = `${normalizeMediaKey(song.artist)}|${normalizeMediaKey(albumLabel)}`;
+        let group = albumGroups.get(key);
+        if (!group) {
+            group = {
+                type: 'album',
+                artist: song.artist,
+                album: albumLabel,
+                songs: [],
+            };
+            albumGroups.set(key, group);
+            groups.push(group);
+        }
+
+        group.songs.push(song);
+    });
+
+    return groups.flatMap(group => {
+        if (group.type === 'album' && group.songs.length === 1) {
+            return [{ type: 'song', song: group.songs[0] }];
+        }
+        return [group];
+    });
+}
+
+function createCategoryAlbumCard(group, category) {
+    const songs = group.songs || [];
+    const primarySong = songs.find(song => song.thumbnailUrl || song.youtubeId) || songs[0];
+    const trackNames = songs
+        .map(song => String(song.title || '').trim())
+        .filter(Boolean);
+    const previewTracks = trackNames.slice(0, 4).join(', ');
+    const hiddenTrackCount = Math.max(trackNames.length - 4, 0);
+    const workLabels = Array.from(new Set(
+        songs
+            .map(song => String(song.workDisplay || '').trim())
+            .filter(Boolean)
+    ));
+    const years = Array.from(new Set(
+        songs
+            .map(song => String(song.year || '').trim())
+            .filter(Boolean)
+    ));
+
+    const card = document.createElement('div');
+    card.className = 'music-card album-group-card';
+    card.innerHTML = `
+        <div class="card-thumbnail">
+            <img src="" alt="${group.album}" data-youtube-id="${primarySong?.youtubeId || ''}">
+        </div>
+        <div class="card-info">
+            <div class="card-title">${group.album}</div>
+            <div class="card-artist">${group.artist}</div>
+            <div class="card-description">${previewTracks}${hiddenTrackCount > 0 ? ` 외 ${hiddenTrackCount}곡` : ''}</div>
+            <div class="card-tags">
+                <span class="song-count">${songs.length}곡</span>
+                ${workLabels[0] ? `<span class="card-work">${workLabels[0]}</span>` : ''}
+                ${years[0] ? `<span class="card-genre">${years[0]}</span>` : ''}
+            </div>
+        </div>
+    `;
+
+    const thumbnailImg = card.querySelector('.card-thumbnail img');
+    if (thumbnailImg && primarySong) {
+        loadThumbnailForSong(thumbnailImg, primarySong);
+    }
+
+    const descriptionParts = [
+        `작업유형: ${category}`,
+        trackNames.length ? `수록곡: ${trackNames.join(', ')}` : '',
+        workLabels.length ? `세부 작업: ${workLabels.join(' / ')}` : '',
+    ].filter(Boolean);
+
+    card.addEventListener('click', (e) => {
+        e.preventDefault();
+        openModal({
+            ...primarySong,
+            title: group.album,
+            artist: group.artist,
+            workDisplay: workLabels.join(' / ') || primarySong.workDisplay,
+            year: years.join(', ') || primarySong.year,
+            description: descriptionParts.join(' | '),
+        });
+    });
+
+    card.addEventListener('touchstart', function() {
+        this.style.opacity = '0.8';
+    }, { passive: true });
+
+    card.addEventListener('touchend', function() {
+        this.style.opacity = '1';
+    }, { passive: true });
+
+    return card;
 }
 
 // 노래 카드 생성 헬퍼 함수
