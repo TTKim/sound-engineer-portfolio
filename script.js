@@ -80,8 +80,12 @@ function loadThumbnailWithFallback(img, youtubeId) {
     tryNext();
 }
 
-function loadImageDirectly(img, imageUrl) {
+function loadImageDirectly(img, imageUrl, onError) {
     if (!imageUrl) {
+        if (typeof onError === 'function') {
+            onError();
+            return;
+        }
         img.style.display = 'none';
         return;
     }
@@ -92,14 +96,32 @@ function loadImageDirectly(img, imageUrl) {
         img.style.opacity = '1';
     };
     img.onerror = () => {
+        if (typeof onError === 'function') {
+            onError();
+            return;
+        }
         img.style.display = 'none';
     };
     img.src = imageUrl;
 }
 
 function loadThumbnailForSong(img, song) {
-    if (song.thumbnailUrl) {
-        loadImageDirectly(img, song.thumbnailUrl);
+    const directCandidates = Array.from(new Set([
+        song.thumbnailUrl,
+        song.fallbackThumbnailUrl,
+    ].filter(Boolean)));
+
+    if (directCandidates.length) {
+        let index = 0;
+        const tryNextImage = () => {
+            if (index >= directCandidates.length) {
+                loadThumbnailWithFallback(img, song.youtubeId);
+                return;
+            }
+            const imageUrl = directCandidates[index++];
+            loadImageDirectly(img, imageUrl, tryNextImage);
+        };
+        tryNextImage();
         return;
     }
     loadThumbnailWithFallback(img, song.youtubeId);
@@ -197,7 +219,7 @@ const fallbackArtistsData = {
 
 let artistsData = JSON.parse(JSON.stringify(fallbackArtistsData));
 let mediaMatchMap = {};
-const ASSET_VERSION = '20260409a';
+const ASSET_VERSION = '20260410a';
 
 function withVersionParam(path) {
     return `${path}?v=${ASSET_VERSION}`;
@@ -643,7 +665,8 @@ function buildArtistsDataFromCsv(csvText) {
             description: descriptionParts.join(' | ') || '포트폴리오 작업물',
             youtubeId,
             youtubeUrl: youtubeUrl || mappedYoutubeUrl || (youtubeId ? `https://www.youtube.com/watch?v=${youtubeId}` : ''),
-            thumbnailUrl: coverImageUrlRaw || media?.cover_url || media?.youtube_thumbnail || (youtubeId ? `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg` : '')
+            thumbnailUrl: coverImageUrlRaw || media?.cover_url || '',
+            fallbackThumbnailUrl: media?.youtube_thumbnail || (youtubeId ? `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg` : '')
         });
         
         if (album) built[artistName]._albumSet.add(album);
