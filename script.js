@@ -219,7 +219,7 @@ const fallbackArtistsData = {
 
 let artistsData = JSON.parse(JSON.stringify(fallbackArtistsData));
 let mediaMatchMap = {};
-const ASSET_VERSION = '20260410a';
+const ASSET_VERSION = '20260410b';
 
 function withVersionParam(path) {
     return `${path}?v=${ASSET_VERSION}`;
@@ -777,7 +777,10 @@ function getPriorityAlbums() {
                 album: albumName,
                 priority: getSongPriorityWeight(song),
                 songsCount: 0,
-                youtubeId: song.youtubeId || ''
+                youtubeId: song.youtubeId || '',
+                thumbnailUrl: song.thumbnailUrl || '',
+                fallbackThumbnailUrl: song.fallbackThumbnailUrl || '',
+                representativeSong: song
             };
         }
 
@@ -786,6 +789,15 @@ function getPriorityAlbums() {
         current.songsCount += 1;
         if (!current.youtubeId && song.youtubeId) {
             current.youtubeId = song.youtubeId;
+        }
+        if (!current.thumbnailUrl && song.thumbnailUrl) {
+            current.thumbnailUrl = song.thumbnailUrl;
+        }
+        if (!current.fallbackThumbnailUrl && song.fallbackThumbnailUrl) {
+            current.fallbackThumbnailUrl = song.fallbackThumbnailUrl;
+        }
+        if ((!current.representativeSong?.thumbnailUrl && song.thumbnailUrl) || (!current.representativeSong?.youtubeId && song.youtubeId)) {
+            current.representativeSong = song;
         }
     });
 
@@ -830,9 +842,9 @@ function renderPriorityShowcase() {
     featured.forEach(item => {
         const card = document.createElement('article');
         card.className = 'priority-card';
-
-        const thumb = item.youtubeId
-            ? `<img src="" alt="${item.album}" data-youtube-id="${item.youtubeId}">`
+        const hasThumbnail = Boolean(item.thumbnailUrl || item.fallbackThumbnailUrl || item.youtubeId);
+        const thumb = hasThumbnail
+            ? `<img src="" alt="${item.album}" data-youtube-id="${item.youtubeId || ''}">`
             : '<div class="priority-card-thumb-fallback">NO VIDEO</div>';
 
         card.innerHTML = `
@@ -847,8 +859,12 @@ function renderPriorityShowcase() {
         `;
 
         const thumbImg = card.querySelector('img');
-        if (thumbImg && item.youtubeId) {
-            loadThumbnailWithFallback(thumbImg, item.youtubeId);
+        if (thumbImg) {
+            loadThumbnailForSong(thumbImg, {
+                thumbnailUrl: item.thumbnailUrl || item.representativeSong?.thumbnailUrl || '',
+                fallbackThumbnailUrl: item.fallbackThumbnailUrl || item.representativeSong?.fallbackThumbnailUrl || '',
+                youtubeId: item.youtubeId || item.representativeSong?.youtubeId || ''
+            });
         }
 
         card.addEventListener('click', () => {
