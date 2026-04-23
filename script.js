@@ -219,7 +219,7 @@ const fallbackArtistsData = {
 
 let artistsData = JSON.parse(JSON.stringify(fallbackArtistsData));
 let mediaMatchMap = {};
-const ASSET_VERSION = '20260423a';
+const ASSET_VERSION = '20260424a';
 
 function withVersionParam(path) {
     return `${path}?v=${ASSET_VERSION}`;
@@ -532,6 +532,23 @@ function parseYearValue(value) {
     return match ? Number(match[0]) : '';
 }
 
+function splitGenreLabels(value) {
+    const normalized = String(value || '')
+        .replace(/\s*&\s*/g, ', ')
+        .replace(/\s*,\s*/g, ',');
+    const labels = normalized
+        .split(',')
+        .map(part => part.trim())
+        .filter(Boolean);
+    const uniqueLabels = [];
+    labels.forEach(label => {
+        if (!uniqueLabels.includes(label)) {
+            uniqueLabels.push(label);
+        }
+    });
+    return uniqueLabels.length ? uniqueLabels : ['미분류'];
+}
+
 function inferYearValue(...texts) {
     const yearRegex = /(19|20)\d{2}/;
     for (const text of texts) {
@@ -651,12 +668,16 @@ function buildArtistsDataFromCsv(csvText) {
             descriptionParts.push(`영상: ${youtubeUrl || mappedYoutubeUrl}`);
         }
         
+        const genreLabel = genreRaw || genreMelonRaw || '미분류';
+        const genres = splitGenreLabels(genreLabel);
+
         built[artistName].songs.push({
             id: songId++,
             title,
             album,
             // Genre should represent musical genre, not engineering work type.
-            genre: genreRaw || genreMelonRaw || '미분류',
+            genre: genreLabel,
+            genres,
             year,
             category: primaryCategory,
             categories: workCategories,
@@ -880,10 +901,15 @@ function getSongsByGenre() {
     const songs = getAllSongs();
     const grouped = {};
     songs.forEach(song => {
-        if (!grouped[song.genre]) {
-            grouped[song.genre] = [];
-        }
-        grouped[song.genre].push(song);
+        const genres = Array.isArray(song.genres) && song.genres.length
+            ? song.genres
+            : splitGenreLabels(song.genre);
+        genres.forEach(genre => {
+            if (!grouped[genre]) {
+                grouped[genre] = [];
+            }
+            grouped[genre].push(song);
+        });
     });
     return grouped;
 }
