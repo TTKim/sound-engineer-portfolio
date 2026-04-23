@@ -219,7 +219,7 @@ const fallbackArtistsData = {
 
 let artistsData = JSON.parse(JSON.stringify(fallbackArtistsData));
 let mediaMatchMap = {};
-const ASSET_VERSION = '20260410b';
+const ASSET_VERSION = '20260423a';
 
 function withVersionParam(path) {
     return `${path}?v=${ASSET_VERSION}`;
