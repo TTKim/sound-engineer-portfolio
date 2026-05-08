@@ -534,7 +534,6 @@ function parseYearValue(value) {
 
 function splitGenreLabels(value) {
     const normalized = String(value || '')
-        .replace(/\s*&\s*/g, ', ')
         .replace(/\s*,\s*/g, ',');
     const labels = normalized
         .split(',')
